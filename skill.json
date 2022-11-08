@@ -40,11 +40,11 @@
             "hilfe"
           ],
           "keywords": [],
-          "name": "bsp",
+          "name": "Trivial Pursuit",
           "summary": "Sample Short Description"
         },
         "en-US": {
-          "name": "bsp"
+          "name": "Trivial Pursuit"
         }
       },
       "testingInstructions": "Sample Testing Instructions."
