@@ -1,0 +1,60 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "hallo welt",
+      "intents": [
+        {
+          "name": "YesIntent",
+          "slots": [],
+          "samples": [
+            "ok",
+            "ja",
+            "yes"
+          ]
+        },
+        {
+          "name": "AnswerIntent",
+          "slots": [
+            {
+              "name": "first",
+              "type": "AMAZON.NUMBER"
+            },
+            {
+              "name": "second",
+              "type": "AMAZON.NUMBER"
+            },
+            {
+              "name": "third",
+              "type": "AMAZON.NUMBER"
+            }
+          ],
+          "samples": [
+            "{first} {second} und die {third}",
+            "{first} {second} und {third}",
+            "{first} {second} {third}"
+          ]
+        },
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.NavigateHomeIntent",
+          "samples": []
+        },
+        {
+          "name": "LaunchIntent",
+          "slots": [],
+          "samples": []
+        },
+        {
+          "name": "LaunchRequest",
+          "slots": [],
+          "samples": []
+        }
+      ],
+      "types": []
+    }
+  },
+  "version": "8"
+}
