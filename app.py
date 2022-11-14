@@ -8,7 +8,7 @@ from ask_sdk_core.utils import is_request_type, is_intent_name
 from ask_sdk_core.handler_input import HandlerInput
 from ask_sdk_model.ui import SimpleCard
 from ask_sdk_model import Response
-
+import game_api
 app = Flask(__name__)
 
 client = MongoClient(port=27017)
@@ -16,6 +16,7 @@ db=client.local
 
 sb = SkillBuilder()
 
+gameapi = game_api()
 class LaunchRequestHandler(AbstractRequestHandler):
     """Handler for Skill Launch."""
 
@@ -92,6 +93,31 @@ class HelpIntentHandler(AbstractRequestHandler):
             speech_text).set_card(SimpleCard("Hello World", speech_text))
         return handler_input.response_builder.response
 
+#class dummyHandler(AbstractRequestHandler):
+#    """Single handler for Cancel and Stop Intent."""
+#
+#    def can_handle(self, handler_input):
+#        # type: (HandlerInput) -> bool
+#        return (is_intent_name("AMAZON.CancelIntent")(handler_input) or
+#                is_intent_name("AMAZON.StopIntent")(handler_input))
+#
+#    def handle(self, handler_input):
+#        # type: (HandlerInput) -> Response
+#        speech_text = "Goodbye!"
+#
+#        handler_input.response_builder.speak(speech_text).set_card(
+#            SimpleCard("Hello World", speech_text))
+#        return handler_input.response_builder.response
+
+
+class NewGameIntentHandler(AbstractRequestHandler):
+    """Handler for creating a new game"""
+    def can_handle(self, handler_input: HandlerInput) -> bool:
+        return super().can_handle(handler_input)
+
+    def handle(self, handler_input: HandlerInput):
+        game_api.trivia.initGame()
+        return super().handle(handler_input)
 
 class CancelOrStopIntentHandler(AbstractRequestHandler):
     """Single handler for Cancel and Stop Intent."""
