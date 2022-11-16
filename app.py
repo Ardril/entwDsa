@@ -17,6 +17,7 @@ db=client.local
 sb = SkillBuilder()
 
 gameapi = game_api()
+
 class LaunchRequestHandler(AbstractRequestHandler):
     """Handler for Skill Launch."""
 
@@ -26,13 +27,24 @@ class LaunchRequestHandler(AbstractRequestHandler):
 
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
-        speech_text = "Welcome to the Alexa Skills Kit, you can say hello!"
+        session_attr = handler_input.attributes_manager.session_attributes
+        session_attr["state"] = "introduced"
+        
+        speech_text = "Welcome to our Trivial Pursuit Game"
+        ask_text = "Would you like to start a game?"
 
-        handler_input.response_builder.speak(speech_text).set_card(
-            SimpleCard("Hello World", speech_text)).set_should_end_session(
-            False)
+        handler_input.response_builder.speak(speech_text).ask(ask_text)
         return handler_input.response_builder.response
 
+
+class YesIntentHandler(AbstractRequestHandler):
+    """Handler for Yes Intent"""
+    
+    def can_handle(self, handler_input: HandlerInput) -> bool:
+        return is_intent_name("AMAZON.YesIntent")(handler_input)
+    
+    def handle(self, handler_input: HandlerInput):
+        session_attr = handler_input.attributes_manager.session_attributes
 
 class StoreNameRequestHandler(AbstractRequestHandler):
     """Handler for Skill Launch."""
@@ -60,24 +72,6 @@ class StoreNameRequestHandler(AbstractRequestHandler):
             False)
         return handler_input.response_builder.response
 
-
-class HelloWorldIntentHandler(AbstractRequestHandler):
-    """Handler for Hello World Intent."""
-
-    def can_handle(self, handler_input):
-        # type: (HandlerInput) -> bool
-        return is_intent_name("HelloWorldIntent")(handler_input)
-
-    def handle(self, handler_input):
-        # type: (HandlerInput) -> Response
-        speech_text = "Hello Python World from Classes!"
-
-        handler_input.response_builder.speak(speech_text).set_card(
-            SimpleCard("Hello World", speech_text)).set_should_end_session(
-            True)
-        return handler_input.response_builder.response
-
-
 class HelpIntentHandler(AbstractRequestHandler):
     """Handler for Help Intent."""
 
@@ -92,23 +86,6 @@ class HelpIntentHandler(AbstractRequestHandler):
         handler_input.response_builder.speak(speech_text).ask(
             speech_text).set_card(SimpleCard("Hello World", speech_text))
         return handler_input.response_builder.response
-
-#class dummyHandler(AbstractRequestHandler):
-#    """Single handler for Cancel and Stop Intent."""
-#
-#    def can_handle(self, handler_input):
-#        # type: (HandlerInput) -> bool
-#        return (is_intent_name("AMAZON.CancelIntent")(handler_input) or
-#                is_intent_name("AMAZON.StopIntent")(handler_input))
-#
-#    def handle(self, handler_input):
-#        # type: (HandlerInput) -> Response
-#        speech_text = "Goodbye!"
-#
-#        handler_input.response_builder.speak(speech_text).set_card(
-#            SimpleCard("Hello World", speech_text))
-#        return handler_input.response_builder.response
-
 
 class NewGameIntentHandler(AbstractRequestHandler):
     """Handler for creating a new game"""
@@ -189,7 +166,6 @@ class CatchAllExceptionHandler(AbstractExceptionHandler):
 
 sb.add_request_handler(LaunchRequestHandler())
 sb.add_request_handler(StoreNameRequestHandler())
-sb.add_request_handler(HelloWorldIntentHandler())
 sb.add_request_handler(HelpIntentHandler())
 sb.add_request_handler(CancelOrStopIntentHandler())
 sb.add_request_handler(FallbackIntentHandler())

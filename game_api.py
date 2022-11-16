@@ -75,7 +75,7 @@ class trivia():
     
 
     def __init__(self):
-        resp= requests.get("https://opentdb.com/api_token.php?command=request").json()
+        resp = requests.get("https://opentdb.com/api_token.php?command=request").json()
         self._TOKEN = resp['token']
         self.buildCategories()
         self._game = self.game()
