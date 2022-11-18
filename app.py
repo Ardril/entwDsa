@@ -55,6 +55,8 @@ class YesIntentHandler(AbstractRequestHandler):
             
             handler_input.response_builder.speak(speech_text).ask(ask_text)
             return handler_input.response_builder.response
+        else:
+            pass
 
 class NumberOfPlayersIntentHandler(AbstractRequestHandler):
     """Handler for player count"""
@@ -67,7 +69,7 @@ class NumberOfPlayersIntentHandler(AbstractRequestHandler):
     def handle(self, handler_input: HandlerInput):
         session_attr = handler_input.attributes_manager.session_attributes
         session_attr["state"] = "waitingForPlayerNames"
-        playerCount = handler_input.request_envelope.request.intent.slots["AMAZON.NUMBER"].value
+        playerCount = handler_input.request_envelope.request.intent.slots["count"].value
         session_attr["playerCount"] = playerCount
         
         speech_text = "Okay."
@@ -89,7 +91,7 @@ class AddPlayerIntentHandler(AbstractRequestHandler):
     
     def handle(self, handler_input: HandlerInput):
         session_attr = handler_input.attributes_manager.session_attributes
-        playerName = handler_input.request_envelope.request.intent.slots["AMAZON.FirstName"].value
+        playerName = handler_input.request_envelope.request.intent.slots["name"].value
         
         for i in session_attr["player"]:    # Counts the amount of players already added
             i += 1
