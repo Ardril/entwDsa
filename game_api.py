@@ -21,11 +21,11 @@ class game():
     # == > buildURL must be called once for each category
     activePlayer = None
 
-    def addPlayer(self,player):
+    def addPlayer(self, player: str):
         if(self.playing):
             return False
         else:
-            self.players.append(player)
+            self.players.append({player, 0})
             return True
 
     def setAmount(self,amount:int):
@@ -57,6 +57,7 @@ class game():
         if difficulty > 3 or difficulty < 1:
             raise ArgumentError(message="Difficulty must be a number between 1-3")
         self.settings["difficulty"] = difficulty
+        
 class trivia():
     translation = Translator()
     _TOKEN = None

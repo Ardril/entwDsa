@@ -45,6 +45,74 @@ class YesIntentHandler(AbstractRequestHandler):
     
     def handle(self, handler_input: HandlerInput):
         session_attr = handler_input.attributes_manager.session_attributes
+        if "state" in session_attr and session_attr["state"] == "introduced":
+            session_attr["state"] = "waitingForPlayerCount"
+            session_attr["player"] = {{}}
+            session_attr["playerCount"] = 0
+            
+            speech_text = "Thats cool!"
+            ask_text = "How many players are you?"
+            
+            handler_input.response_builder.speak(speech_text).ask(ask_text)
+            return handler_input.response_builder.response
+
+class NumberOfPlayersIntentHandler(AbstractRequestHandler):
+    """Handler for player count"""
+    
+    def can_handle(self, handler_input: HandlerInput) -> bool:
+        session_attr = handler_input.attributes_manager.session_attributes
+        
+        return "state" in session_attr and session_attr["state"] == "waitingForPlayerCount" and is_intent_name("NumberOfPlayersIntent")(handler_input)
+    
+    def handle(self, handler_input: HandlerInput):
+        session_attr = handler_input.attributes_manager.session_attributes
+        session_attr["state"] = "waitingForPlayerNames"
+        playerCount = handler_input.request_envelope.request.intent.slots["AMAZON.NUMBER"].value
+        session_attr["playerCount"] = playerCount
+        
+        speech_text = "Okay."
+        if playerCount > 1:
+            ask_text = "Player 1, what is your name?"
+        else:
+            ask_text = "What is your name?"
+        
+        handler_input.response_builder.speak(speech_text).ask(ask_text)
+        return handler_input.response_builder.response
+
+class AddPlayerIntentHandler(AbstractRequestHandler):
+    """Handler for adding player with name"""
+    
+    def can_handle(self, handler_input: HandlerInput) -> bool:
+        session_attr = handler_input.attributes_manager.session_attributes
+        
+        return "state" in session_attr and session_attr["state"] == "waitingForPlayerNames" and is_intent_name("AddPlayerIntent")(handler_input)
+    
+    def handle(self, handler_input: HandlerInput):
+        session_attr = handler_input.attributes_manager.session_attributes
+        playerName = handler_input.request_envelope.request.intent.slots["AMAZON.FirstName"].value
+        
+        for i in session_attr["player"]:    # Counts the amount of players already added
+            i += 1
+        if i == 0:
+            session_attr["player"][0]["name"] = playerName
+            session_attr["player"][0]["score"] = 0
+        else:
+            session_attr["player"][i+1]["name"] = playerName
+            session_attr["player"][i+1]["score"] = 0
+        if i == (session_attr["playerCount"] - 1):          # If all players are added now
+            session_attr["state"] = "waitingForDifficulty"
+            
+            speech_text = "Okay!"
+            ask_text = "Now that we are all present, on which difficulty do you wanna play?"
+            
+            handler_input.response_builder.speak(speech_text).ask(ask_text)
+            return handler_input.response_builder.response
+        else:
+            speech_text = "Okay!"
+            ask_text = "Player "+(i+1)+" what is your name?"
+            
+            handler_input.response_builder.speak(speech_text).ask(ask_text)
+            return handler_input.response_builder.response
 
 class StoreNameRequestHandler(AbstractRequestHandler):
     """Handler for Skill Launch."""
