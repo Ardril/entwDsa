@@ -9,6 +9,7 @@ from ask_sdk_core.handler_input import HandlerInput
 from ask_sdk_model.ui import SimpleCard
 from ask_sdk_model import Response
 import game_api
+from ask_sdk_core.handler_input import HandlerInput
 app = Flask(__name__)
 
 client = MongoClient(port=27017)
