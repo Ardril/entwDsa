@@ -21,10 +21,10 @@ class LaunchRequestHandler(AbstractRequestHandler):
         session_attr = handler_input.attributes_manager.session_attributes
         session_attr["state"] = "introduced"
         
-        speech_text = "Welcome to our Trivial Pursuit Game"
-        ask_text = "Would you like to start a game?"
+        speech_text = "Welcome to our Trivial Pursuit Game. Would you like to start a game?"
+        repromt = "If you need help, just say so"
 
-        handler_input.response_builder.speak(speech_text).ask(ask_text)
+        handler_input.response_builder.speak(speech_text).ask(repromt)
         return handler_input.response_builder.response
 
 
@@ -41,10 +41,10 @@ class YesIntentHandler(AbstractRequestHandler):
             session_attr["player"] = {{}}
             session_attr["playerCount"] = 0
             
-            speech_text = "Thats cool!"
-            ask_text = "How many players are you?"
+            speech_text = "Thats cool! How many players are you?"
+            repromt = "How many players are you?"
             
-            handler_input.response_builder.speak(speech_text).ask(ask_text)
+            handler_input.response_builder.speak(speech_text).ask(repromt)
             return handler_input.response_builder.response
         else:
             pass
@@ -63,13 +63,13 @@ class NumberOfPlayersIntentHandler(AbstractRequestHandler):
         playerCount = handler_input.request_envelope.request.intent.slots["count"].value
         session_attr["playerCount"] = playerCount
         
-        speech_text = "Okay."
         if playerCount > 1:
-            ask_text = "Player 1, what is your name?"
+            speech_text = "Okay. Player 1, what is your name?"
         else:
-            ask_text = "What is your name?"
+            speech_text = "Okay. What is your name?"
+        repromt = "What is your name?"
         
-        handler_input.response_builder.speak(speech_text).ask(ask_text)
+        handler_input.response_builder.speak(speech_text).ask(repromt)
         return handler_input.response_builder.response
 
 class AddPlayerIntentHandler(AbstractRequestHandler):
@@ -95,16 +95,16 @@ class AddPlayerIntentHandler(AbstractRequestHandler):
         if i == (session_attr["playerCount"] - 1):          # If all players are added now
             session_attr["state"] = "waitingForDifficulty"
             
-            speech_text = "Okay!"
-            ask_text = "Now that we are all present, on which difficulty do you wanna play?"
+            speech_text = "Okay! Now that we are all present, on which difficulty do you wanna play?"
+            repromt = "On which difficulty do you wanna play?"
             
-            handler_input.response_builder.speak(speech_text).ask(ask_text)
+            handler_input.response_builder.speak(speech_text).ask(repromt)
             return handler_input.response_builder.response
         else:
             speech_text = "Okay!"
-            ask_text = "Player "+(i+1)+" what is your name?"
+            repromt = "Player "+(i+1)+" what is your name?"
             
-            handler_input.response_builder.speak(speech_text).ask(ask_text)
+            handler_input.response_builder.speak(speech_text).ask(repromt)
             return handler_input.response_builder.response
 
 class HelpIntentHandler(AbstractRequestHandler):
@@ -118,15 +118,6 @@ class HelpIntentHandler(AbstractRequestHandler):
 
         handler_input.response_builder.speak(speech_text).ask(speech_text)
         return handler_input.response_builder.response
-
-class NewGameIntentHandler(AbstractRequestHandler):
-    """Handler for creating a new game"""
-    def can_handle(self, handler_input: HandlerInput) -> bool:
-        return super().can_handle(handler_input)
-
-    def handle(self, handler_input: HandlerInput) -> Response:
-        game_api.trivia.initGame()
-        return super().handle(handler_input)
 
 class CancelOrStopIntentHandler(AbstractRequestHandler):
     """Single handler for Cancel and Stop Intent."""
@@ -153,9 +144,9 @@ class FallbackIntentHandler(AbstractRequestHandler):
 
     def handle(self, handler_input: HandlerInput) -> Response:
         speech_text = (
-            "The Hello World skill can't help you with that.  "
-            "You can say hello!!")
-        reprompt = "You can say hello!!"
+            "The Trivial Pursuit skill can't help you with that. "
+            "You can say help")
+        repromt = "If you need help just say so"
         handler_input.response_builder.speak(speech_text).ask(reprompt)
         return handler_input.response_builder.response
 
