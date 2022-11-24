@@ -7,10 +7,6 @@ from ask_sdk_webservice_support.webservice_handler import WebserviceSkillHandler
 import azure.functions as func
 import json
 
-import game_api
-
-gameapi = game_api()
-
 class LaunchRequestHandler(AbstractRequestHandler):
     """Handler for Skill Launch."""
 
@@ -19,6 +15,12 @@ class LaunchRequestHandler(AbstractRequestHandler):
 
     def handle(self, handler_input: HandlerInput) -> Response:
         session_attr = handler_input.attributes_manager.session_attributes
+        #session_attr["test"] = {
+        #    "0": {
+        #        "name": "bla",
+        #        "score": 0,
+        #    },
+        #}
         session_attr["state"] = "introduced"
         
         speech_text = "Welcome to our Trivial Pursuit Game. Would you like to start a game?"
@@ -36,9 +38,8 @@ class YesIntentHandler(AbstractRequestHandler):
     
     def handle(self, handler_input: HandlerInput) -> Response:
         session_attr = handler_input.attributes_manager.session_attributes
-        if "state" in session_attr and session_attr["state"] == "introduced":
+        if ("state" in session_attr) and (session_attr["state"] == "introduced"):
             session_attr["state"] = "waitingForPlayerCount"
-            session_attr["player"] = {{}}
             session_attr["playerCount"] = 0
             
             speech_text = "Thats cool! How many players are you?"
@@ -55,16 +56,16 @@ class NumberOfPlayersIntentHandler(AbstractRequestHandler):
     def can_handle(self, handler_input: HandlerInput) -> bool:
         session_attr = handler_input.attributes_manager.session_attributes
         
-        return "state" in session_attr and session_attr["state"] == "waitingForPlayerCount" and is_intent_name("NumberOfPlayersIntent")(handler_input)
+        return ("state" in session_attr) and (session_attr["state"] == "waitingForPlayerCount") and is_intent_name("NumberOfPlayersIntent")(handler_input)
     
     def handle(self, handler_input: HandlerInput) -> Response:
         session_attr = handler_input.attributes_manager.session_attributes
         session_attr["state"] = "waitingForPlayerNames"
-        playerCount = handler_input.request_envelope.request.intent.slots["count"].value
+        playerCount = int(handler_input.request_envelope.request.intent.slots["count"].value)
         session_attr["playerCount"] = playerCount
         
         if playerCount > 1:
-            speech_text = "Okay. Player 1, what is your name?"
+            speech_text = "Okay. Player one, what is your name?"
         else:
             speech_text = "Okay. What is your name?"
         repromt = "What is your name?"
@@ -78,34 +79,31 @@ class AddPlayerIntentHandler(AbstractRequestHandler):
     def can_handle(self, handler_input: HandlerInput) -> bool:
         session_attr = handler_input.attributes_manager.session_attributes
         
-        return "state" in session_attr and session_attr["state"] == "waitingForPlayerNames" and is_intent_name("AddPlayerIntent")(handler_input)
+        return ("state" in session_attr) and (session_attr["state"] == "waitingForPlayerNames") and is_intent_name("AddPlayerIntent")(handler_input)
     
     def handle(self, handler_input: HandlerInput) -> Response:
         session_attr = handler_input.attributes_manager.session_attributes
         playerName = handler_input.request_envelope.request.intent.slots["name"].value
         
-        for i in session_attr["player"]:    # Counts the amount of players already added
-            i += 1
-        if i == 0:
+        if not ("player" in session_attr):                      # If no players are added yet, the first one gets added
             session_attr["player"][0]["name"] = playerName
             session_attr["player"][0]["score"] = 0
         else:
+            for i in session_attr["player"]:                    # if at least one player is added yet, the next one gets added
+                i += 1
             session_attr["player"][i+1]["name"] = playerName
             session_attr["player"][i+1]["score"] = 0
-        if i == (session_attr["playerCount"] - 1):          # If all players are added now
+        if i == (session_attr["playerCount"] - 1):              # If all players are added now
             session_attr["state"] = "waitingForDifficulty"
             
             speech_text = "Okay! Now that we are all present, on which difficulty do you wanna play?"
             repromt = "On which difficulty do you wanna play?"
-            
-            handler_input.response_builder.speak(speech_text).ask(repromt)
-            return handler_input.response_builder.response
         else:
-            speech_text = "Okay!"
+            speech_text = "Okay! Player "+(i+1)+" what is your name?"
             repromt = "Player "+(i+1)+" what is your name?"
             
-            handler_input.response_builder.speak(speech_text).ask(repromt)
-            return handler_input.response_builder.response
+        handler_input.response_builder.speak(speech_text).ask(repromt)
+        return handler_input.response_builder.response
 
 class HelpIntentHandler(AbstractRequestHandler):
     """Handler for Help Intent."""
