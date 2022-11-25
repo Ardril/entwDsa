@@ -196,12 +196,12 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     sb.add_request_handler(LaunchRequestHandler())
     sb.add_request_handler(YesIntentHandler())
     sb.add_request_handler(NumberOfPlayersIntentHandler())
-    sb.add_request_handler(AddPlayerIntentHandler())
+    sb.add_request_handler(AddPlayerIntentHandler()) 
+    sb.add_request_handler(setDifficultyIntentHandler())
     sb.add_request_handler(HelpIntentHandler())
     sb.add_request_handler(CancelOrStopIntentHandler())
     sb.add_request_handler(FallbackIntentHandler())
     sb.add_request_handler(SessionEndedRequestHandler())
-    sb.add_request_handler(setDifficultyIntentHandler())
 
     sb.add_exception_handler(CatchAllExceptionHandler())
     
