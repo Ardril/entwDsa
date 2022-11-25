@@ -6,6 +6,7 @@ from ask_sdk_model import Response
 from ask_sdk_webservice_support.webservice_handler import WebserviceSkillHandler
 import azure.functions as func
 import json
+import os
 
 class LaunchRequestHandler(AbstractRequestHandler):
     """Handler for Skill Launch."""
@@ -190,7 +191,7 @@ class CatchAllExceptionHandler(AbstractExceptionHandler):
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
     sb = SkillBuilder()
-    sb.skill_id = "amzn1.ask.skill.7be2b36b-03d7-416b-959f-1ea6660159c3"
+    sb.skill_id = os.environ["skill_id"]
     
     sb.add_request_handler(LaunchRequestHandler())
     sb.add_request_handler(YesIntentHandler())
