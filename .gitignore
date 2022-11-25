@@ -13,6 +13,7 @@ project.lock.json
 
 /packages
 /TestResults
+/.vscode
 
 /tools/NuGet.exe
 /App_Data
@@ -24,6 +25,7 @@ local.settings.json
 
 node_modules
 dist
+getting_started.md
 
 # Local python packages
 .python_packages/

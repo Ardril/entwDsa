@@ -1,3 +1,48 @@
+"""! @brief Amazon Alexa Skill in Style of the popular boardgame "Trivial Pursuit"."""
+
+"""!
+    @mainpage Trivial Pursuit Amazon Alexa Skill
+    
+    @section description_main Description
+    An Trivial Pursuit Alexa Skill, which first asks a few configuration questions (e.g. how many players are playing) 
+    and then continues asking question about a lot of different topics
+    
+    @section notes_main Notes
+    - Written in Python
+    - Code hosted on a Microsoft Azure Functions server
+"""
+
+"""!
+    @file app.py
+    
+    @brief Main file
+    
+    @section description_app Description
+    The pillar of the entire programm, containing the main-method, all Intent-Handler and the entire game logic
+    
+    @section libraries_main Libraries/Modules
+    - ask_sdk_core (components)
+        - Needed for all handler
+    - ask_sdk_model (component)
+        - Acces to class Response
+    - ask_sdk_webservice_support (component)
+        - Needed to convert handler/Response <-> HTTP
+    - azure.functions
+        - Needed for Azure Functions hosting
+    - json
+        - Needed to convert Response -> HTTP
+    - os
+        - Acces to environment variables on Azure Functions server
+    
+    @section todo_app ToDo
+    - Implement game logic
+    
+    @section author_app Authors
+    - Justin Stahl
+    - Niklas Klemens
+    - Felicitas Fuhrmann
+"""
+
 from ask_sdk_core.skill_builder import SkillBuilder
 from ask_sdk_core.dispatch_components import AbstractRequestHandler, AbstractExceptionHandler
 from ask_sdk_core.utils import is_request_type, is_intent_name
