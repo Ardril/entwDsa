@@ -1,4 +1,4 @@
 <map id="FallbackIntentHandler" name="FallbackIntentHandler">
-<area shape="rect" id="node1" title=" " alt="" coords="13,80,177,107"/>
+<area shape="rect" id="node1" title="This handler will not be triggered except in supported locales, so it is safe to deploy on any locale..." alt="" coords="13,80,177,107"/>
 <area shape="rect" id="node2" title=" " alt="" coords="5,5,185,32"/>
 </map>

@@ -43,6 +43,7 @@ venv.bak/
 __pycache__/
 *.py[cod]
 *$py.class
+*.xlsx
 
 # Azurite artifacts
 __blobstorage__

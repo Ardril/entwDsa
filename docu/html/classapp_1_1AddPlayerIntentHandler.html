@@ -23,6 +23,7 @@
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Trivial Pursuit - Alexa Skill
    </div>
+   <div id="projectbrief">An Amazon Alexa Skill in Style of the popular boardgame Trivial Pursuit</div>
   </td>
  </tr>
  </tbody>
@@ -72,12 +73,15 @@ $(function() {
 <div class="title">AddPlayerIntentHandler Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Handler for adding player(s) with name.  
+ <a href="classapp_1_1AddPlayerIntentHandler.html#details">More...</a></p>
 <div class="dynheader">
 Inheritance diagram for AddPlayerIntentHandler:</div>
 <div class="dyncontent">
 <div class="center"><img src="classapp_1_1AddPlayerIntentHandler__inherit__graph.png" border="0" usemap="#aAddPlayerIntentHandler_inherit__map" alt="Inheritance graph"/></div>
 <map name="aAddPlayerIntentHandler_inherit__map" id="aAddPlayerIntentHandler_inherit__map">
-<area shape="rect" title=" " alt="" coords="7,80,184,107"/>
+<area shape="rect" title="Handler for adding player(s) with name." alt="" coords="7,80,184,107"/>
 <area shape="rect" title=" " alt="" coords="5,5,185,32"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
@@ -86,7 +90,7 @@ Collaboration diagram for AddPlayerIntentHandler:</div>
 <div class="dyncontent">
 <div class="center"><img src="classapp_1_1AddPlayerIntentHandler__coll__graph.png" border="0" usemap="#aAddPlayerIntentHandler_coll__map" alt="Collaboration graph"/></div>
 <map name="aAddPlayerIntentHandler_coll__map" id="aAddPlayerIntentHandler_coll__map">
-<area shape="rect" title=" " alt="" coords="7,80,184,107"/>
+<area shape="rect" title="Handler for adding player(s) with name." alt="" coords="7,80,184,107"/>
 <area shape="rect" title=" " alt="" coords="5,5,185,32"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
@@ -94,12 +98,21 @@ Collaboration diagram for AddPlayerIntentHandler:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a1b1da4d5129f094ddd08440c51206434"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapp_1_1AddPlayerIntentHandler.html#a1b1da4d5129f094ddd08440c51206434">can_handle</a> (self, HandlerInput handler_input)</td></tr>
+<tr class="memdesc:a1b1da4d5129f094ddd08440c51206434"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the Request inside the Handler Input has the session attribute <em>state</em> set to <em>waitingForPlayerNames</em> and the intent name is <em>AddPlayerIntent</em>.  <a href="classapp_1_1AddPlayerIntentHandler.html#a1b1da4d5129f094ddd08440c51206434">More...</a><br /></td></tr>
 <tr class="separator:a1b1da4d5129f094ddd08440c51206434"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab96119ad5ca74c816fb8bed3686b3652"><td class="memItemLeft" align="right" valign="top">Response&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapp_1_1AddPlayerIntentHandler.html#ab96119ad5ca74c816fb8bed3686b3652">handle</a> (self, HandlerInput handler_input)</td></tr>
+<tr class="memdesc:ab96119ad5ca74c816fb8bed3686b3652"><td class="mdescLeft">&#160;</td><td class="mdescRight">Appends a new player with his stated name from the request to the session attribute <em>player</em>, which is a dictionary.  <a href="classapp_1_1AddPlayerIntentHandler.html#ab96119ad5ca74c816fb8bed3686b3652">More...</a><br /></td></tr>
 <tr class="separator:ab96119ad5ca74c816fb8bed3686b3652"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><pre class="fragment">Handler for adding player with name</pre> </div><h2 class="groupheader">Member Function Documentation</h2>
+<div class="textblock"><p>Handler for adding player(s) with name. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">AbstractRequestHandler</td><td>Responsible for processing Request inside the Handler Input and generating Response. </td></tr>
+  </table>
+  </dd>
+</dl>
+</div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a1b1da4d5129f094ddd08440c51206434"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1b1da4d5129f094ddd08440c51206434">&#9670;&nbsp;</a></span>can_handle()</h2>
 
@@ -125,6 +138,14 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Returns true if the Request inside the Handler Input has the session attribute <em>state</em> set to <em>waitingForPlayerNames</em> and the intent name is <em>AddPlayerIntent</em>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">handler_input</td><td>Contains the session attribute and intent name. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -154,6 +175,15 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Appends a new player with his stated name from the request to the session attribute <em>player</em>, which is a dictionary. </p>
+<p>If it does not exist yet, it gets added. If all players are added (session attribute <em>playerCount</em> == keys in <em>player</em>), the session attribute <em>state</em> gets set to <em>waitingForDifficulty</em> and the Response gets built to asks the user, on which difficulty he wanna play. If not, the built Response asks the next player for his name.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">handler_input</td><td>Contains methods to manipulate the session attributes and build the Response. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
@@ -162,7 +192,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Fri Nov 25 2022 23:25:17 for Trivial Pursuit - Alexa Skill by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

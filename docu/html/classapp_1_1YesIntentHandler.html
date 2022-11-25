@@ -23,6 +23,7 @@
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Trivial Pursuit - Alexa Skill
    </div>
+   <div id="projectbrief">An Amazon Alexa Skill in Style of the popular boardgame Trivial Pursuit</div>
   </td>
  </tr>
  </tbody>
@@ -72,12 +73,15 @@ $(function() {
 <div class="title">YesIntentHandler Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Handler for Yes Intent.  
+ <a href="classapp_1_1YesIntentHandler.html#details">More...</a></p>
 <div class="dynheader">
 Inheritance diagram for YesIntentHandler:</div>
 <div class="dyncontent">
 <div class="center"><img src="classapp_1_1YesIntentHandler__inherit__graph.png" border="0" usemap="#aYesIntentHandler_inherit__map" alt="Inheritance graph"/></div>
 <map name="aYesIntentHandler_inherit__map" id="aYesIntentHandler_inherit__map">
-<area shape="rect" title=" " alt="" coords="29,80,161,107"/>
+<area shape="rect" title="Handler for Yes Intent." alt="" coords="29,80,161,107"/>
 <area shape="rect" title=" " alt="" coords="5,5,185,32"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
@@ -86,7 +90,7 @@ Collaboration diagram for YesIntentHandler:</div>
 <div class="dyncontent">
 <div class="center"><img src="classapp_1_1YesIntentHandler__coll__graph.png" border="0" usemap="#aYesIntentHandler_coll__map" alt="Collaboration graph"/></div>
 <map name="aYesIntentHandler_coll__map" id="aYesIntentHandler_coll__map">
-<area shape="rect" title=" " alt="" coords="29,80,161,107"/>
+<area shape="rect" title="Handler for Yes Intent." alt="" coords="29,80,161,107"/>
 <area shape="rect" title=" " alt="" coords="5,5,185,32"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
@@ -94,12 +98,21 @@ Collaboration diagram for YesIntentHandler:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a1b1da4d5129f094ddd08440c51206434"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapp_1_1YesIntentHandler.html#a1b1da4d5129f094ddd08440c51206434">can_handle</a> (self, HandlerInput handler_input)</td></tr>
+<tr class="memdesc:a1b1da4d5129f094ddd08440c51206434"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if he Request inside the Handler Input has the intent name <em>AMAZON.YesIntent</em>.  <a href="classapp_1_1YesIntentHandler.html#a1b1da4d5129f094ddd08440c51206434">More...</a><br /></td></tr>
 <tr class="separator:a1b1da4d5129f094ddd08440c51206434"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab96119ad5ca74c816fb8bed3686b3652"><td class="memItemLeft" align="right" valign="top">Response&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapp_1_1YesIntentHandler.html#ab96119ad5ca74c816fb8bed3686b3652">handle</a> (self, HandlerInput handler_input)</td></tr>
+<tr class="memdesc:ab96119ad5ca74c816fb8bed3686b3652"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the session attribute <em>state</em> to <em>waitingForPlayerCount</em> and the Response gets built to asks the user how many players they are.  <a href="classapp_1_1YesIntentHandler.html#ab96119ad5ca74c816fb8bed3686b3652">More...</a><br /></td></tr>
 <tr class="separator:ab96119ad5ca74c816fb8bed3686b3652"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><pre class="fragment">Handler for Yes Intent</pre> </div><h2 class="groupheader">Member Function Documentation</h2>
+<div class="textblock"><p>Handler for Yes Intent. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">AbstractRequestHandler</td><td>Responsible for processing Request inside the Handler Input and generating Response. </td></tr>
+  </table>
+  </dd>
+</dl>
+</div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a1b1da4d5129f094ddd08440c51206434"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1b1da4d5129f094ddd08440c51206434">&#9670;&nbsp;</a></span>can_handle()</h2>
 
@@ -125,6 +138,14 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Returns true if he Request inside the Handler Input has the intent name <em>AMAZON.YesIntent</em>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">handler_input</td><td>Contains the intent name. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -154,6 +175,14 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Sets the session attribute <em>state</em> to <em>waitingForPlayerCount</em> and the Response gets built to asks the user how many players they are. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">handler_input</td><td>Contains methods to manipulate the session attributes and build the Response. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
@@ -162,7 +191,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Fri Nov 25 2022 23:25:17 for Trivial Pursuit - Alexa Skill by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
