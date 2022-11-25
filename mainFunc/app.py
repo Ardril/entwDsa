@@ -106,6 +106,25 @@ class AddPlayerIntentHandler(AbstractRequestHandler):
         handler_input.response_builder.speak(speech_text).ask(reprompt)
         return handler_input.response_builder.response
 
+class SetDifficultyIntentHandler(AbstractRequestHandler):
+    """Handler for setting the difficulty."""
+
+    def can_handle(self, handler_input: HandlerInput) -> bool:
+        session_attr = handler_input.attributes_manager.session_attributes
+        
+        return ("state" in session_attr) and (session_attr["state"] == "waitingForDifficulty") and is_intent_name("SetDifficultyIntent")(handler_input)
+        
+    def handle(self, handler_input: HandlerInput) -> Response:
+        session_attr = handler_input.attributes_manager.session_attributes
+        difficulty = handler_input.request_envelope.request.intent.slots["difficulty"].value
+        session_attr["difficulty"] = difficulty
+        session_attr["state"] = "waitingForCategory"
+
+        speech_text = ("The difficulty has been set to " + difficulty)
+
+        handler_input.response_builder.speak(speech_text)
+        return handler_input.response_builder.response
+
 class HelpIntentHandler(AbstractRequestHandler):
     """Handler for Help Intent."""
 
@@ -116,25 +135,6 @@ class HelpIntentHandler(AbstractRequestHandler):
         speech_text = "You can say hello to me!"
 
         handler_input.response_builder.speak(speech_text).ask(speech_text)
-        return handler_input.response_builder.response
-
-class setDifficultyIntentHandler(AbstractRequestHandler):
-    """Handler for setting the difficulty."""
-
-    def can_handle(self, handler_input: HandlerInput) -> bool:
-        session_attr = handler_input.attributes_manager.session_attributes
-        
-        return "state" in session_attr and session_attr["state"] == "waitingForDifficulty" and is_intent_name("setDifficultyIntent")(handler_input)
-        
-    def handle(self, handler_input: HandlerInput):
-        session_attr = handler_input.attributes_manager.session_attributes
-        difficulty = handler_input.request_envelope.request.intent.slots["difficulty"].value
-        session_attr["difficulty"] = difficulty
-        session_attr["state"] = "waitingForCategory"
-
-        speech_text = ("The difficulty has been set to " + difficulty)
-        handler_input.response_builder.speak(speech_text)
-
         return handler_input.response_builder.response
 
 class CancelOrStopIntentHandler(AbstractRequestHandler):
@@ -201,7 +201,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     sb.add_request_handler(YesIntentHandler())
     sb.add_request_handler(NumberOfPlayersIntentHandler())
     sb.add_request_handler(AddPlayerIntentHandler()) 
-    sb.add_request_handler(setDifficultyIntentHandler())
+    sb.add_request_handler(SetDifficultyIntentHandler())
     sb.add_request_handler(HelpIntentHandler())
     sb.add_request_handler(CancelOrStopIntentHandler())
     sb.add_request_handler(FallbackIntentHandler())
