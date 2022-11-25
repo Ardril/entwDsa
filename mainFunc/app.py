@@ -119,20 +119,24 @@ class HelpIntentHandler(AbstractRequestHandler):
         return handler_input.response_builder.response
 
 class setDifficultyIntentHandler(AbstractRequestHandler):
+    """Handler for setting the difficulty."""
 
     def can_handle(self, handler_input: HandlerInput) -> bool:
         session_attr = handler_input.attributes_manager.session_attributes
         
-        return "state" in session_attr and session_attr["state"] == "waitingForDifficulty" and is_intent_name("setDifficulty")(handler_input)
+        return "state" in session_attr and session_attr["state"] == "waitingForDifficulty" and is_intent_name("setDifficultyIntent")(handler_input)
+        
     def handle(self, handler_input: HandlerInput):
         session_attr = handler_input.attributes_manager.session_attributes
-        difficulty = handler_input.request_envelope.request.intent.slots["requestedDifficulty"].value
-        session_attr["difficulty"] = str(difficulty)
+        difficulty = handler_input.request_envelope.request.intent.slots["difficulty"].value
+        session_attr["difficulty"] = difficulty
+        session_attr["state"] = "waitingForCategory"
 
-        response_text = "The difficulty has been set to "+difficulty
-        handler_input.response_builder.speak(response_text)
+        speech_text = ("The difficulty has been set to " + difficulty)
+        handler_input.response_builder.speak(speech_text)
 
         return handler_input.response_builder.response
+
 class CancelOrStopIntentHandler(AbstractRequestHandler):
     """Single handler for Cancel and Stop Intent."""
 
