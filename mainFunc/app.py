@@ -201,6 +201,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     sb.add_request_handler(CancelOrStopIntentHandler())
     sb.add_request_handler(FallbackIntentHandler())
     sb.add_request_handler(SessionEndedRequestHandler())
+    sb.add_request_handler(setDifficultyIntentHandler())
 
     sb.add_exception_handler(CatchAllExceptionHandler())
     
