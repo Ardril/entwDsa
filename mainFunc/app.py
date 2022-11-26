@@ -211,10 +211,26 @@ class SetDifficultyIntentHandler(AbstractRequestHandler):
         session_attr["difficulty"] = difficulty
         session_attr["state"] = "waitingForCategory"
 
-        speech_text = ("The difficulty has been set to " + difficulty)  
+        speech_text = ("The difficulty has been set to " + difficulty+".")  
+        speech_text2 = ("Which categories do you want to use?")
 
-        handler_input.response_builder.speak(speech_text)
+        handler_input.response_builder.speak(speech_text+speech_text2)
         return handler_input.response_builder.response
+
+class selectCategoryIntentHandler(AbstractRequestHandler):
+    def can_handle(self, handler_input: HandlerInput):
+        session_attr = handler_input.attributes_manager.session_attributes
+        
+        return ("state" in session_attr) and (session_attr["state"] == "waitingForCategory") and is_intent_name("selectCategoryIntent")(handler_input)
+
+    def handle(self, handler_input: HandlerInput):
+        session_attr = handler_input.attributes_manager.session_attributes
+        #speech_text = "Which categories do you want to use?"
+        
+        
+
+        pass
+
 
 class HelpIntentHandler(AbstractRequestHandler):
     """! Handler for Help Intent"""
