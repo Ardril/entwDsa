@@ -50,6 +50,10 @@ from ask_sdk_webservice_support.webservice_handler import WebserviceSkillHandler
 import azure.functions as func
 import json
 import os
+import game_api
+
+global game 
+game = game_api.trivia()
 
 class LaunchRequestHandler(AbstractRequestHandler):
     """! Handler for Skill Launch"""
@@ -226,8 +230,10 @@ class selectCategoryIntentHandler(AbstractRequestHandler):
     def handle(self, handler_input: HandlerInput):
         session_attr = handler_input.attributes_manager.session_attributes
         #speech_text = "Which categories do you want to use?"
-        
-        
+        categories = handler_input.request_envelope.request.intent.slot["category"].values
+        game.returnHumanReadableCategories()
+        for cat in categories:
+            if cat in 
 
         pass
 

@@ -79,18 +79,8 @@ class trivia():
         resp = requests.get("https://opentdb.com/api_token.php?command=request").json()
         self._TOKEN = resp['token']
         self.buildCategories()
-        self._game = self.game()
-        self.setupNewGame(self._game)
-        url = self.buidlUrl(
-                            self._game.settings["amount"],
-                            self._game.settings["typ"],
-                            self._game.settings["categories"],
-                            self._game.settings["difficulty"]
-                            )
-        self._game.questions = self.getQuestions(url)
-
-
-        self.buidlUrl
+        self._game = game()
+        print(self.returnHumanReadableCategories())
 
     def setupNewGame(self,game : game):
         
@@ -102,6 +92,17 @@ class trivia():
         categoryResponse = requests.get("https://opentdb.com/api_category.php").json()
         self._categories = deepcopy(categoryResponse['trivia_categories'])
         return self._categories
+        
+    def returnHumanReadableCategories(self):
+        huReCat = deepcopy(self._categories)
+        i = 1
+        for cat in huReCat:
+            if(":" in cat["name"]):
+                cat["name"] = cat["name"].split(":")[1]
+            cat["number"] = i
+            i += 1
+        return huReCat
+
     def getQuestions(self,url):
         resp = requests.get(url).json()
         quest = []
