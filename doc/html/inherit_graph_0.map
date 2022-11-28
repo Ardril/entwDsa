@@ -1,0 +1,13 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" title=" " alt="" coords="5,233,185,260"/>
+<area shape="rect" id="node2" href="$classapp_1_1AddPlayerIntentHandler.html" title="Handler for adding player(s) with name." alt="" coords="258,5,435,32"/>
+<area shape="rect" id="node3" href="$classapp_1_1CancelOrStopIntentHandler.html" title="Single handler for Cancel and Stop Intent." alt="" coords="247,56,446,83"/>
+<area shape="rect" id="node4" href="$classapp_1_1FallbackIntentHandler.html" title="This handler will not be triggered except in supported locales, so it is safe to deploy on any locale..." alt="" coords="265,107,429,133"/>
+<area shape="rect" id="node5" href="$classapp_1_1HelpIntentHandler.html" title="Handler for Help Intent." alt="" coords="276,157,417,184"/>
+<area shape="rect" id="node6" href="$classapp_1_1LaunchRequestHandler.html" title="Handler for Skill Launch." alt="" coords="261,208,433,235"/>
+<area shape="rect" id="node7" href="$classapp_1_1NumberOfPlayersIntentHandler.html" title="Handler for player count." alt="" coords="233,259,460,285"/>
+<area shape="rect" id="node8" href="$classapp_1_1SessionEndedRequestHandler.html" title="Handler for Session End." alt="" coords="239,309,455,336"/>
+<area shape="rect" id="node9" href="$classapp_1_1SetDifficultyIntentHandler.html" title="Handler for setting the difficulty." alt="" coords="251,360,442,387"/>
+<area shape="rect" id="node10" href="$classapp_1_1YesIntentHandler.html" title="Handler for Yes Intent." alt="" coords="281,411,413,437"/>
+<area shape="rect" id="node11" href="$classapp_1_1selectCategoryIntentHandler.html" title=" " alt="" coords="242,461,451,488"/>
+</map>
