@@ -1,5 +1,5 @@
 {
-  "scriptFile": "../src/app.py",
+  "scriptFile": "../src/getPlayerIcons.py",
   "bindings": [
     {
       "authLevel": "anonymous",

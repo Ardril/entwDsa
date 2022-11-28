@@ -1,3 +1,8 @@
+.git*
+.vscode
+local.settings.json
+test
 .venv
 game_api.py
 docu
+LICENSE
