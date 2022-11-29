@@ -208,26 +208,35 @@ class SetDifficultyIntentHandler(AbstractRequestHandler):
             and sets it to the value stated in the request. Also builds the Response to repeat the difficulty set.
         """
         """! @param handler_input Contains methods to manipulate the session attributes and build the Response."""
-        """! \todo Add building Response to ask for category settings"""
         
         session_attr = handler_input.attributes_manager.session_attributes
         difficulty = handler_input.request_envelope.request.intent.slots["difficulty"].value
         session_attr["difficulty"] = difficulty
         session_attr["state"] = "waitingForCategory"
 
-        speech_text = ("The difficulty has been set to " + difficulty+".")  
-        speech_text2 = ("Which categories do you want to use?")
+        speech_text = f"The difficulty has been set to {difficulty}. Which categories do you want to use?"
+        reprompt = "Which categories do you want to use?"
 
-        handler_input.response_builder.speak(speech_text+speech_text2)
+        handler_input.response_builder.speak(speech_text).ask(reprompt)
         return handler_input.response_builder.response
 
-class selectCategoryIntentHandler(AbstractRequestHandler):
-    def can_handle(self, handler_input: HandlerInput):
+class SelectCategoryIntentHandler(AbstractRequestHandler):
+    def can_handle(self, handler_input: HandlerInput) -> bool:
+        """! Returns true if the Request inside the Handler Input has the session attribute *state* set to *waitingForCategory* 
+            and the intent name is *SelectCategoryIntent*. 
+        """
+        """! @param handler_input Contains the session attribute and intent name."""
+        
         session_attr = handler_input.attributes_manager.session_attributes
         
         return ("state" in session_attr) and (session_attr["state"] == "waitingForCategory") and is_intent_name("selectCategoryIntent")(handler_input)
 
-    def handle(self, handler_input: HandlerInput):
+    def handle(self, handler_input: HandlerInput) -> Response:
+        """! \todo Sets the session attributes *state* to "question1", *categories* to the value got from handler_input, 
+            builds the Response to announce that the game will start now and asks the first question.
+        """
+        """! @param handler_input Contains methods to manipulate the session attributes and build the Response."""
+        
         session_attr = handler_input.attributes_manager.session_attributes
         #speech_text = "Which categories do you want to use?"
         categories = handler_input.request_envelope.request.intent.slot["category"].values
@@ -340,7 +349,7 @@ class CatchAllExceptionHandler(AbstractExceptionHandler):
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
     """! The main function initialises the Skill with all avaible handlers and validates that the request was meant for this specific skill. 
-        It also converts incomming HTTP headers and body into native format of dict and str and vice versa
+        It also converts incomming HTTP headers and bodys into native format of dict and str and vice versa
     """
     """! @param req Contains the incomming request"""
     
@@ -352,6 +361,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     sb.add_request_handler(NumberOfPlayersIntentHandler())
     sb.add_request_handler(AddPlayerIntentHandler()) 
     sb.add_request_handler(SetDifficultyIntentHandler())
+    sb.ad_request_handler(SelectCategoryIntentHandler)
     sb.add_request_handler(HelpIntentHandler())
     sb.add_request_handler(CancelOrStopIntentHandler())
     sb.add_request_handler(FallbackIntentHandler())

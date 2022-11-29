@@ -6,8 +6,8 @@
 <area shape="rect" id="node5" href="$classapp_1_1HelpIntentHandler.html" title="Handler for Help Intent." alt="" coords="276,157,417,184"/>
 <area shape="rect" id="node6" href="$classapp_1_1LaunchRequestHandler.html" title="Handler for Skill Launch." alt="" coords="261,208,433,235"/>
 <area shape="rect" id="node7" href="$classapp_1_1NumberOfPlayersIntentHandler.html" title="Handler for player count." alt="" coords="233,259,460,285"/>
-<area shape="rect" id="node8" href="$classapp_1_1SessionEndedRequestHandler.html" title="Handler for Session End." alt="" coords="239,309,455,336"/>
-<area shape="rect" id="node9" href="$classapp_1_1SetDifficultyIntentHandler.html" title="Handler for setting the difficulty." alt="" coords="251,360,442,387"/>
-<area shape="rect" id="node10" href="$classapp_1_1YesIntentHandler.html" title="Handler for Yes Intent." alt="" coords="281,411,413,437"/>
-<area shape="rect" id="node11" href="$classapp_1_1selectCategoryIntentHandler.html" title=" " alt="" coords="242,461,451,488"/>
+<area shape="rect" id="node8" href="$classapp_1_1SelectCategoryIntentHandler.html" title=" " alt="" coords="241,309,452,336"/>
+<area shape="rect" id="node9" href="$classapp_1_1SessionEndedRequestHandler.html" title="Handler for Session End." alt="" coords="239,360,455,387"/>
+<area shape="rect" id="node10" href="$classapp_1_1SetDifficultyIntentHandler.html" title="Handler for setting the difficulty." alt="" coords="251,411,442,437"/>
+<area shape="rect" id="node11" href="$classapp_1_1YesIntentHandler.html" title="Handler for Yes Intent." alt="" coords="281,461,413,488"/>
 </map>
