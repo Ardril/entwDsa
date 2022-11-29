@@ -1,3 +1,5 @@
+"""! @brief For this file, theres only a automaticly created doxygen documentation for now"""
+"""! \todo Add doxygen comments"""
 
 from argparse import ArgumentError
 from copy import deepcopy

@@ -1,6 +1,8 @@
 var searchData=
 [
-  ['can_5fhandle_3',['can_handle',['../classapp_1_1LaunchRequestHandler.html#a1b1da4d5129f094ddd08440c51206434',1,'app.LaunchRequestHandler.can_handle()'],['../classapp_1_1YesIntentHandler.html#a1b1da4d5129f094ddd08440c51206434',1,'app.YesIntentHandler.can_handle()'],['../classapp_1_1NumberOfPlayersIntentHandler.html#a1b1da4d5129f094ddd08440c51206434',1,'app.NumberOfPlayersIntentHandler.can_handle()'],['../classapp_1_1AddPlayerIntentHandler.html#a1b1da4d5129f094ddd08440c51206434',1,'app.AddPlayerIntentHandler.can_handle()'],['../classapp_1_1SetDifficultyIntentHandler.html#a1b1da4d5129f094ddd08440c51206434',1,'app.SetDifficultyIntentHandler.can_handle()'],['../classapp_1_1selectCategoryIntentHandler.html#ac832301dae8e4699b64aa7ce8f443030',1,'app.selectCategoryIntentHandler.can_handle()'],['../classapp_1_1HelpIntentHandler.html#a1b1da4d5129f094ddd08440c51206434',1,'app.HelpIntentHandler.can_handle()'],['../classapp_1_1CancelOrStopIntentHandler.html#a1b1da4d5129f094ddd08440c51206434',1,'app.CancelOrStopIntentHandler.can_handle()'],['../classapp_1_1FallbackIntentHandler.html#a1b1da4d5129f094ddd08440c51206434',1,'app.FallbackIntentHandler.can_handle()'],['../classapp_1_1SessionEndedRequestHandler.html#a1b1da4d5129f094ddd08440c51206434',1,'app.SessionEndedRequestHandler.can_handle()'],['../classapp_1_1CatchAllExceptionHandler.html#aa49eaebdf745dcd0a2c8c050a80e4f53',1,'app.CatchAllExceptionHandler.can_handle()']]],
-  ['cancelorstopintenthandler_4',['CancelOrStopIntentHandler',['../classapp_1_1CancelOrStopIntentHandler.html',1,'app']]],
-  ['catchallexceptionhandler_5',['CatchAllExceptionHandler',['../classapp_1_1CatchAllExceptionHandler.html',1,'app']]]
+  ['activeplayer_1',['activePlayer',['../classgame__api_1_1game.html#adcee32e9770563d58c113d714d3f60f7',1,'game_api::game']]],
+  ['addplayer_2',['addPlayer',['../classgame__api_1_1game.html#a4b88c03346bd175f0b0183d63f992155',1,'game_api::game']]],
+  ['addplayerintenthandler_3',['AddPlayerIntentHandler',['../classapp_1_1AddPlayerIntentHandler.html',1,'app']]],
+  ['app_4',['app',['../namespaceapp.html',1,'']]],
+  ['app_2epy_5',['app.py',['../app_8py.html',1,'']]]
 ];
