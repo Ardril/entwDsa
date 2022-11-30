@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['yesintenthandler_19',['YesIntentHandler',['../classapp_1_1YesIntentHandler.html',1,'app']]]
+  ['numberofplayersintenthandler_22',['NumberOfPlayersIntentHandler',['../classapp_1_1NumberOfPlayersIntentHandler.html',1,'app']]]
 ];

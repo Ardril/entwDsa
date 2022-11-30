@@ -1,12 +1,37 @@
+"""! @brief API-managing file"""
+
+##
+# @file game_api.py
+#    
+# @brief API-managing file
+#    
+# @section description_game_api Description
+# Code in this file manages the API calls to get the requested questions
+#
+# @section notes_game_api Notes
+# For code in this file, theres only a automaticly created doxygen documentation for now
+#
+# @section libraries_main Libraries/Modules
+# - requests
+#   - Needed to send HTTP-requests to the API
+# - json
+#   - Needed to parse the HTTP-response from the API into json format
+#  
+# @section todo_game_api TODO
+# - Implement game logics
+# - Add doxygen comments
+#    
+# @section author_game_api Authors
+# - Niklas Klemens
+# - Justin Stahl
+# - Felicitas Fuhrmann
 
 from argparse import ArgumentError
 from copy import deepcopy
 import time
 from typing import Iterable
 import requests
-import json 
-from googletrans import Translator
-
+import json
 
 class game():
     players = []    #player = ("name",points)
@@ -59,7 +84,6 @@ class game():
         self.settings["difficulty"] = difficulty
         
 class trivia():
-    translation = Translator()
     _TOKEN = None
     _categories = {}
     #{"response_code":0,

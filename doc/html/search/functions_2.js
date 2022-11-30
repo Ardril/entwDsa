@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['main_37',['main',['../namespaceapp.html#ab3b1aadecf4291962315553dfb54de45',1,'app.main()'],['../namespacegetPlayerIcons.html#a5e90b678d1cfa5c29992726e38cb9400',1,'getPlayerIcons.main()']]]
+  ['buidlurl_59',['buidlUrl',['../classgame__api_1_1trivia.html#a997d36545be5c8325a610940ab2938bc',1,'game_api::trivia']]],
+  ['buildcategories_60',['buildCategories',['../classgame__api_1_1trivia.html#a567f5cabf1393e97ea205433992c8a80',1,'game_api::trivia']]]
 ];
