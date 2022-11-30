@@ -94,14 +94,14 @@ class trivia():
         return self._categories
         
     def returnHumanReadableCategories(self):
-        huReCat = deepcopy(self._categories)
+        hrc = deepcopy(self._categories)
         i = 1
-        for cat in huReCat:
+        for cat in hrc:
             if(":" in cat["name"]):
                 cat["name"] = cat["name"].split(":")[1]
             cat["number"] = i
             i += 1
-        return huReCat
+        return hrc
 
     def getQuestions(self,url):
         resp = requests.get(url).json()

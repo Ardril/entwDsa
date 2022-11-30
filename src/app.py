@@ -231,12 +231,28 @@ class selectCategoryIntentHandler(AbstractRequestHandler):
         session_attr = handler_input.attributes_manager.session_attributes
         #speech_text = "Which categories do you want to use?"
         categories = handler_input.request_envelope.request.intent.slot["category"].values
-        game.returnHumanReadableCategories()
+        hucat = game.returnHumanReadableCategories()
         for cat in categories:
-            if cat in 
+            if cat in hucat or 
 
         pass
 
+class tellCategoriesIntentHandler(AbstractRequestHandler):
+    def can_handle(self, handler_input: HandlerInput):
+        session_attr = handler_input.attributes_manager.session_attributes
+        
+        return ("state" in session_attr) and (session_attr["state"] == "waitingForCategory") and is_intent_name("tellCategories")(handler_input)
+
+    def handle(self, handler_input: HandlerInput):
+        session_attr = handler_input.attributes_manager.session_attributes
+        #speech_text = "Which categories do you want to use?"
+        categories = handler_input.request_envelope.request.intent.slot["category"].values
+        hucat = game.returnHumanReadableCategories()
+        speech_text = "The following categories are available"
+        for cat in hucat:
+            speech_text += cat['id'] + cat['name'] + ","
+        handler_input.response_builder.speak(speech_text)
+        return handler_input.response_builder.response
 
 class HelpIntentHandler(AbstractRequestHandler):
     """! Handler for Help Intent"""
