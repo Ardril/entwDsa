@@ -236,15 +236,26 @@ class SelectCategoryIntentHandler(AbstractRequestHandler):
             builds the Response to announce that the game will start now and asks the first question.
         """
         """! @param handler_input Contains methods to manipulate the session attributes and build the Response."""
-        
+        alexa = handler_input.response_builder
         session_attr = handler_input.attributes_manager.session_attributes
         #speech_text = "Which categories do you want to use?"
         categories = handler_input.request_envelope.request.intent.slot["category"].values
-        hucat = game.returnHumanReadableCategories()
+        hucat = game.returnHumanReadableCategories("numbers")
+        selected_cats = []
+        missing_cats = ""
         for cat in categories:
-            if cat in hucat or 
-
-        pass
+            if cat not in hucat:
+                missing_cats += cat
+            else:
+                selected_cats.append(cat)
+        if missing_cats != "":
+            speech_text = "Sorry,the categories"+missing_cats+"are not available at the moment"
+            alexa.speak(speech_text)
+        session_attr["category"] = selected_cats
+        
+        speech_text = "Your selected categories have been added."
+        alexa.speak(speech_text).ask("Please")
+        return alexa.response
 
 class tellCategoriesIntentHandler(AbstractRequestHandler):
     def can_handle(self, handler_input: HandlerInput):

@@ -28,6 +28,7 @@
 
 from argparse import ArgumentError
 from copy import deepcopy
+import random
 import time
 from typing import Iterable
 import requests
@@ -117,7 +118,9 @@ class trivia():
         self._categories = deepcopy(categoryResponse['trivia_categories'])
         return self._categories
         
-    def returnHumanReadableCategories(self):
+    def returnHumanReadableCategories(self, mode):
+        if(mode not in ["numbers,names"]):
+            raise ArgumentError.message("mode must be one of ['numbers','names']")
         hrc = deepcopy(self._categories)
         i = 1
         for cat in hrc:
@@ -125,10 +128,48 @@ class trivia():
                 cat["name"] = cat["name"].split(":")[1]
             cat["number"] = i
             i += 1
-        return hrc
+        if(mode=="numbers"):
+            li = []
+            for cat in hrc:
+                li.append(hrc["number"])
+            return li
+        elif(mode=="names"):
+            li = []
+            for cat in hrc:
+                li.append(hrc["name"])
+            return li
+        else:
+            return hrc    
 
-    def getQuestions(self,url):
-        resp = requests.get(url).json()
+    def getQuestions(self,categories,difficulty):
+        """Returns a list of questions that were requeste from the api. The amount of questions is split evenly
+         based on the number of categories and the type (multiple-choice/true-false) is based on a random boolean.
+         Before it is returned, the list gets shuffled once"""
+        """! @param categories a list of categories selected by the player(s) """
+        """! @param difficulty """ 
+    	
+
+        questions = []
+        amm = int(50/len(categories))
+        if(difficulty not in ["1","2","3"]) and (difficulty not in ["easy","medium","hard"]) :
+            raise ArgumentError().message("difficulty must either be one of ['1','2','3'] or ['easy','medium','hard']")
+
+        for i in range(len(categories)):
+            typ = bool(random.getrandbits(1))
+            url = self.buidlUrl(amm,typ,categories[i],difficulty)
+            resp = requests.get(url).json()
+
+            if resp["response_code"] != 0:
+                return
+
+            for entry in resp['results']:
+
+                question = entry['question']
+                questions.append(question)
+        random.shuffle(questions)
+
+        return questions
+        
         quest = []
         if resp["response_code"] != 0:
             return
