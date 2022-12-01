@@ -1,6 +1,6 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
 <area shape="rect" id="node1" title=" " alt="" coords="5,259,185,285"/>
-<area shape="rect" id="node2" href="$classapp_1_1AddPlayerIntentHandler.html" title="Handler for adding player(s) with name." alt="" coords="258,5,435,32"/>
+<area shape="rect" id="node2" href="$classapp_1_1AddPlayerIntentHandler.html" title="Handler for adding player(s) with a color." alt="" coords="258,5,435,32"/>
 <area shape="rect" id="node3" href="$classapp_1_1CancelOrStopIntentHandler.html" title="Single handler for Cancel and Stop Intent." alt="" coords="247,56,446,83"/>
 <area shape="rect" id="node4" href="$classapp_1_1FallbackIntentHandler.html" title="This handler will not be triggered except in supported locales, so it is safe to deploy on any locale..." alt="" coords="265,107,429,133"/>
 <area shape="rect" id="node5" href="$classapp_1_1HelpIntentHandler.html" title="Handler for Help Intent." alt="" coords="276,157,417,184"/>
