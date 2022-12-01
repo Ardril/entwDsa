@@ -264,7 +264,7 @@ class SelectCategoryIntentHandler(AbstractRequestHandler):
         session_attr = handler_input.attributes_manager.session_attributes
         #speech_text = "Which categories do you want to use?"
         categories = handler_input.request_envelope.request.intent.slot["category"].values
-        hucat = game.returnHumanReadableCategories("numbers")
+        hucat = game.listCategoriesByName()
         selected_cats = []
         missing_cats = ""
         for cat in categories:
@@ -276,8 +276,9 @@ class SelectCategoryIntentHandler(AbstractRequestHandler):
             speech_text = "Sorry,the categories"+missing_cats+"are not available at the moment"
             alexa.speak(speech_text)
         session_attr["category"] = selected_cats
+        session_attr["state"] = "readyToLaunch"
         
-        speech_text = "Your selected categories have been added."
+        speech_text = "Your selected categories "+str(selected_cats)+"have been added."
         alexa.speak(speech_text).ask("Please")
         return alexa.response
 
@@ -303,7 +304,7 @@ class TellCategoriesIntentHandler(AbstractRequestHandler):
         session_attr = handler_input.attributes_manager.session_attributes
         #speech_text = "Which categories do you want to use?"
         categories = handler_input.request_envelope.request.intent.slot["category"].values
-        hucat = game.returnHumanReadableCategories()
+        hucat = game.listCategoriesByName()
         speech_text = "The following categories are available"
         for cat in hucat:
             speech_text += cat['id'] + cat['name'] + ","

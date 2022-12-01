@@ -79,7 +79,7 @@ class game():
                 raise ArgumentError(message="category must be a number between 9 and 32")
             self.settings["categories"].append(category)
 
-    def setDifficulty(self,difficulty:int):
+    def setDifficulty(self,difficulty:str):
         if difficulty > 3 or difficulty < 1:
             raise ArgumentError(message="Difficulty must be a number between 1-3")
         self.settings["difficulty"] = difficulty
@@ -105,7 +105,7 @@ class trivia():
         self._TOKEN = resp['token']
         self.buildCategories()
         self._game = game()
-        print(self.returnHumanReadableCategories())
+        print(self.listCategoriesByName())
 
     def setupNewGame(self,game : game):
         
@@ -116,11 +116,21 @@ class trivia():
     def buildCategories(self):
         categoryResponse = requests.get("https://opentdb.com/api_category.php").json()
         self._categories = deepcopy(categoryResponse['trivia_categories'])
+        print(str(type(self._categories)))
         return self._categories
-        
+    
+    def listCategoriesByName(self):
+        cs = []
+        for entry in self._categories:
+            if(":" in entry['name']):
+                entry["name"] = entry['name'].split(":")[1]
+            cs.append(entry['name'])
+        return cs
+
+
     def returnHumanReadableCategories(self, mode):
-        if(mode not in ["numbers,names"]):
-            raise ArgumentError.message("mode must be one of ['numbers','names']")
+        if(mode != "numbers" and mode != "names"):
+            raise ArgumentError().message("mode must be one of ['numbers','names']")
         hrc = deepcopy(self._categories)
         i = 1
         for cat in hrc:
@@ -128,10 +138,12 @@ class trivia():
                 cat["name"] = cat["name"].split(":")[1]
             cat["number"] = i
             i += 1
+            print("cat == %s",str(cat))
+        return hrc
         if(mode=="numbers"):
             li = []
             for cat in hrc:
-                li.append(hrc["number"])
+                li.append(hrc['number'])
             return li
         elif(mode=="names"):
             li = []
@@ -169,7 +181,7 @@ class trivia():
         random.shuffle(questions)
 
         return questions
-        
+
         quest = []
         if resp["response_code"] != 0:
             return
