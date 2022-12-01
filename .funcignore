@@ -3,7 +3,6 @@
 local.settings.json
 test
 .venv
-game_api.py
 doc
 LICENSE
 .gitignore
