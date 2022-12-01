@@ -130,32 +130,32 @@ class NumberOfPlayersIntentHandler(AbstractRequestHandler):
     
     def handle(self, handler_input: HandlerInput) -> Response:
         """! Sets the session attribute *state* to *waitingForPlayerNames*, adds the session attribute *playerCount* 
-            and sets it to the value stated in the request. Also the Response gets built to asks the first user how his name is.
+            and sets it to the value stated in the request. Also the Response gets built to asks the first user which color he wants.
         """
         """! @param handler_input Contains methods to manipulate the session attributes and build the Response.
             @return Returns an Response obj which includes the generated Response
         """
         
         session_attr = handler_input.attributes_manager.session_attributes
-        session_attr["state"] = "waitingForPlayerNames"
+        session_attr["state"] = "waitingForPlayerColor"
         playerCount = int(handler_input.request_envelope.request.intent.slots["count"].value)
         session_attr["playerCount"] = playerCount
         
         if playerCount > 1:
-            speech_text = "Okay. Player one, what is your name?"
+            speech_text = "Okay. Player one, which color do you want?"
         else:
-            speech_text = "Okay. What is your name?"
-        reprompt = "What is your name?"
+            speech_text = "Okay. Which color do you want?"
+        reprompt = "Which color do you want?"
         
         handler_input.response_builder.speak(speech_text).ask(reprompt)
         return handler_input.response_builder.response
 
 class AddPlayerIntentHandler(AbstractRequestHandler):
-    """! Handler for adding player(s) with name"""
+    """! Handler for adding player(s) with a color"""
     """! @param AbstractRequestHandler Extension of the class *AbstractRequestHandler*"""
     
     def can_handle(self, handler_input: HandlerInput) -> bool:
-        """! Returns true if the Request inside the Handler Input has the session attribute *state* set to *waitingForPlayerNames* 
+        """! Returns true if the Request inside the Handler Input has the session attribute *state* set to *waitingForPlayerColor* 
             and the intent name is *AddPlayerIntent*. 
         """
         """! @param handler_input Contains the session attribute and intent name.
@@ -164,43 +164,43 @@ class AddPlayerIntentHandler(AbstractRequestHandler):
         
         session_attr = handler_input.attributes_manager.session_attributes
         
-        return ("state" in session_attr) and (session_attr["state"] == "waitingForPlayerNames") and is_intent_name("AddPlayerIntent")(handler_input)
+        return ("state" in session_attr) and (session_attr["state"] == "waitingForPlayerColor") and is_intent_name("AddPlayerIntent")(handler_input)
     
     def handle(self, handler_input: HandlerInput) -> Response:
-        """! Appends a new player with his stated name from the request to the session attribute *player*, which is a dictionary. 
+        """! Appends a new player with his stated color from the request to the session attribute *player*, which is a dictionary. 
             If it does not exist yet, it gets added. If all players are added (session attribute *playerCount* == keys in *player*), the session attribute *state*
-            gets set to *waitingForDifficulty* and the Response gets built to asks the user, on which difficulty he wanna play. 
-            If not, the built Response asks the next player for his name.
+            gets set to *waitingForDifficulty* and the Response gets built to asks the user, on which difficulty he want to play. 
+            If not, the built Response asks the next player for his color.
         """
         """! @param handler_input Contains methods to manipulate the session attributes and build the Response.
             @return Returns an Response obj which includes the generated Response
         """
         
         session_attr = handler_input.attributes_manager.session_attributes
-        playerName = handler_input.request_envelope.request.intent.slots["name"].value
+        playerColor = handler_input.request_envelope.request.intent.slots["color"].value
         
         if not ("player" in session_attr):                      # If no players are added yet, the first one gets added
             _i = 0
             session_attr["player"] = {
                 "0": {
-                    "name": playerName,
+                    "color": playerColor,
                     "score": 0,
                 },
             }
         else:
-            _i = len(session_attr["player"])                     # if at least one player is added yet, the next one gets added
+            _i = len(session_attr["player"])                    # if at least one player is added yet, the next one gets added
             session_attr["player"][str(_i)] = {
-                "name": playerName,
+                "color": playerColor,
                 "score": 0,
             }
-        if _i == (session_attr["playerCount"] - 1):              # If all players are added now
+        if _i == (session_attr["playerCount"] - 1):             # If all players are added now
             session_attr["state"] = "waitingForDifficulty"
             
-            speech_text = "Okay! Now that we are all present, on which difficulty do you wanna play?"
-            reprompt = "On which difficulty do you wanna play?"
+            speech_text = "Okay! Now that we are all present, on which difficulty do you want to play?"
+            reprompt = "On which difficulty do you want to play?"
         else:
-            speech_text = ("Okay! Player "+ str(_i+2) +" what is your name?")
-            reprompt = ("Player "+ str(_i+2) +" what is your name?")
+            speech_text = ("Okay! Player "+ str(_i+2) +" which color do you want?")
+            reprompt = ("Player "+ str(_i+2) +" which color do you want?")
             
         handler_input.response_builder.speak(speech_text).ask(reprompt)
         return handler_input.response_builder.response
@@ -432,8 +432,9 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     """! The main function initialises the Skill with all avaible handlers and validates that the request was meant for this specific skill. 
         It also converts incomming HTTP headers and bodys into native format of dict and str and vice versa
     """
-    """! @param req Contains the incomming request in an azure.functions.HttpRequest obj"""
-    """! @return Returns an azure.functions.HttpResponse obj which includes the http response"""
+    """! @param req Contains the incomming request in an azure.functions.HttpRequest obj
+        @return Returns an azure.functions.HttpResponse obj which includes the http response
+    """
     
     sb = SkillBuilder()
     sb.skill_id = os.environ["skill_id"]
@@ -443,8 +444,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     sb.add_request_handler(NumberOfPlayersIntentHandler())
     sb.add_request_handler(AddPlayerIntentHandler()) 
     sb.add_request_handler(SetDifficultyIntentHandler())
-    sb.ad_request_handler(SelectCategoryIntentHandler())
-    sb.ad_request_handler(TellCategoriesIntentHandler())
+    sb.add_request_handler(SelectCategoryIntentHandler())
+    sb.add_request_handler(TellCategoriesIntentHandler())
     sb.add_request_handler(HelpIntentHandler())
     sb.add_request_handler(CancelOrStopIntentHandler())
     sb.add_request_handler(FallbackIntentHandler())
