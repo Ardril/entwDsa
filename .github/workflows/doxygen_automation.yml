@@ -1,0 +1,9 @@
+name: doxygen
+on: [push, workflow_dispatch]
+jobs:
+  doxygen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: cd doc/doxygen/
+      - run: doxygen
