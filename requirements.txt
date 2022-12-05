@@ -5,3 +5,5 @@
 azure-functions
 ask-sdk-core
 ask-sdk-webservice-support
+argparse
+requests
