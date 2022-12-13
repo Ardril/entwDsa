@@ -10,6 +10,7 @@
 # @section notes_main Notes
 # - Written in Python
 # - Code hosted on a Microsoft Azure Functions server
+# - This project is under active development
 
 ##
 # @file app.py
