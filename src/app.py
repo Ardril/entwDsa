@@ -33,6 +33,8 @@
 #   - Needed to convert Response -> HTTP
 # - os
 #   - Acces to environment variables on Azure Functions server
+# - game_api
+#   - Local import; manages api call and contains game logic and utility functions
 #  
 # @section todo_app TODO
 # - Implement game logic
@@ -51,7 +53,9 @@ from ask_sdk_webservice_support.webservice_handler import WebserviceSkillHandler
 import azure.functions as func
 import json
 import os
-from . import game_api
+
+# Local import
+from src import game_api
 
 game = game_api.trivia()
 
@@ -59,49 +63,49 @@ class LaunchRequestHandler(AbstractRequestHandler):
     """! Handler for Skill Launch"""
     """! @param AbstractRequestHandler Extension of the class *AbstractRequestHandler*"""
 
-    def can_handle(self, _handler_input: HandlerInput) -> bool:
+    def can_handle(self, handler_input: HandlerInput) -> bool:
         """! Returns true if the Request inside the Handler Input is from type *LaunchRequest*."""
-        """! @param _handler_input Contains the request type.
+        """! @param handler_input Contains the request type.
             @return Returns an Boolean value
         """
     
-        return is_request_type("LaunchRequest")(_handler_input)
+        return is_request_type("LaunchRequest")(handler_input)
 
-    def handle(self, _handler_input: HandlerInput) -> Response:
+    def handle(self, handler_input: HandlerInput) -> Response:
         """! Adds the session attribute *state* and sets it to *introduced*. Also the Response gets built to greet the user and asks if the game should start."""
-        """! @param _handler_input Contains methods to manipulate the session attributes and build the Response.
+        """! @param handler_input Contains methods to manipulate the session attributes and build the Response.
             @return Returns an Response obj which includes the generated Response
         """
         
-        _session_attr = _handler_input.attributes_manager.session_attributes
+        _session_attr = handler_input.attributes_manager.session_attributes
         _session_attr["state"] = "introduced"
         
         _speech_text = "Welcome to our Trivial Pursuit Game. Would you like to start a game?"
         _reprompt = "If you need help, just say so"
 
-        _handler_input.response_builder.speak(_speech_text).ask(_reprompt)
-        return _handler_input.response_builder.response
+        handler_input.response_builder.speak(_speech_text).ask(_reprompt)
+        return handler_input.response_builder.response
 
 
 class YesIntentHandler(AbstractRequestHandler):
     """! Handler for Yes Intent"""
     """! @param AbstractRequestHandler Extension of the class *AbstractRequestHandler*"""
     
-    def can_handle(self, _handler_input: HandlerInput) -> bool:
+    def can_handle(self, handler_input: HandlerInput) -> bool:
         """! Returns true if he Request inside the Handler Input has the intent name *AMAZON.YesIntent*."""
-        """! @param _handler_input Contains the intent name.
+        """! @param handler_input Contains the intent name.
             @return Returns an Boolean value
         """
         
-        return is_intent_name("AMAZON.YesIntent")(_handler_input)
+        return is_intent_name("AMAZON.YesIntent")(handler_input)
     
-    def handle(self, _handler_input: HandlerInput) -> Response:
+    def handle(self, handler_input: HandlerInput) -> Response:
         """! Sets the session attribute *state* to *waitingForPlayerCount* and the Response gets built to asks the user how many players they are."""
-        """! @param _handler_input Contains methods to manipulate the session attributes and build the Response.
+        """! @param handler_input Contains methods to manipulate the session attributes and build the Response.
             @return Returns an Response obj which includes the generated Response
         """
         
-        _session_attr = _handler_input.attributes_manager.session_attributes
+        _session_attr = handler_input.attributes_manager.session_attributes
         if ("state" in _session_attr) and (_session_attr["state"] == "introduced"):
             _session_attr["state"] = "waitingForPlayerCount"
             _session_attr["playerCount"] = 0
@@ -109,36 +113,36 @@ class YesIntentHandler(AbstractRequestHandler):
             _speech_text = "Thats cool! How many players are you?"
             _reprompt = "How many players are you?"
             
-            _handler_input.response_builder.speak(_speech_text).ask(_reprompt)
-            return _handler_input.response_builder.response
+            handler_input.response_builder.speak(_speech_text).ask(_reprompt)
+            return handler_input.response_builder.response
 
 class NumberOfPlayersIntentHandler(AbstractRequestHandler):
     """! Handler for player count"""
     """! @param AbstractRequestHandler Extension of the class *AbstractRequestHandler*"""
     
-    def can_handle(self, _handler_input: HandlerInput) -> bool:
+    def can_handle(self, handler_input: HandlerInput) -> bool:
         """! Returns true if the Request inside the Handler Input has the session attribute *state* set to *waitingForPlayerCount* 
             and the intent name is *NumberOfPlayersIntent*. 
         """
-        """! @param _handler_input Contains the session attribute and intent name.
+        """! @param handler_input Contains the session attribute and intent name.
             @return Returns an Boolean value
         """
         
-        _session_attr = _handler_input.attributes_manager.session_attributes
+        _session_attr = handler_input.attributes_manager.session_attributes
         
-        return ("state" in _session_attr) and (_session_attr["state"] == "waitingForPlayerCount") and is_intent_name("NumberOfPlayersIntent")(_handler_input)
+        return ("state" in _session_attr) and (_session_attr["state"] == "waitingForPlayerCount") and is_intent_name("NumberOfPlayersIntent")(handler_input)
     
-    def handle(self, _handler_input: HandlerInput) -> Response:
+    def handle(self, handler_input: HandlerInput) -> Response:
         """! Sets the session attribute *state* to *waitingForPlayerNames*, adds the session attribute *playerCount* 
             and sets it to the value stated in the request. Also the Response gets built to asks the first user which color he wants.
         """
-        """! @param _handler_input Contains methods to manipulate the session attributes and build the Response.
+        """! @param handler_input Contains methods to manipulate the session attributes and build the Response.
             @return Returns an Response obj which includes the generated Response
         """
         
-        _session_attr = _handler_input.attributes_manager.session_attributes
+        _session_attr = handler_input.attributes_manager.session_attributes
         _session_attr["state"] = "waitingForPlayerColor"
-        playerCount = int(_handler_input.request_envelope.request.intent.slots["count"].value)
+        playerCount = int(handler_input.request_envelope.request.intent.slots["count"].value)
         _session_attr["playerCount"] = playerCount
         
         if playerCount > 1:
@@ -147,37 +151,37 @@ class NumberOfPlayersIntentHandler(AbstractRequestHandler):
             _speech_text = "Okay. Which color do you want?"
         _reprompt = "Which color do you want?"
         
-        _handler_input.response_builder.speak(_speech_text).ask(_reprompt)
-        return _handler_input.response_builder.response
+        handler_input.response_builder.speak(_speech_text).ask(_reprompt)
+        return handler_input.response_builder.response
 
 class AddPlayerIntentHandler(AbstractRequestHandler):
     """! Handler for adding player(s) with a color"""
     """! @param AbstractRequestHandler Extension of the class *AbstractRequestHandler*"""
     
-    def can_handle(self, _handler_input: HandlerInput) -> bool:
+    def can_handle(self, handler_input: HandlerInput) -> bool:
         """! Returns true if the Request inside the Handler Input has the session attribute *state* set to *waitingForPlayerColor* 
             and the intent name is *AddPlayerIntent*. 
         """
-        """! @param _handler_input Contains the session attribute and intent name.
+        """! @param handler_input Contains the session attribute and intent name.
             @return Returns an Boolean value
         """
         
-        _session_attr = _handler_input.attributes_manager.session_attributes
+        _session_attr = handler_input.attributes_manager.session_attributes
         
-        return ("state" in _session_attr) and (_session_attr["state"] == "waitingForPlayerColor") and is_intent_name("AddPlayerIntent")(_handler_input)
+        return ("state" in _session_attr) and (_session_attr["state"] == "waitingForPlayerColor") and is_intent_name("AddPlayerIntent")(handler_input)
     
-    def handle(self, _handler_input: HandlerInput) -> Response:
+    def handle(self, handler_input: HandlerInput) -> Response:
         """! Appends a new player with his stated color from the request to the session attribute *player*, which is a dictionary. 
             If it does not exist yet, it gets added. If all players are added (session attribute *playerCount* == keys in *player*), the session attribute *state*
             gets set to *waitingForDifficulty* and the Response gets built to asks the user, on which difficulty he want to play. 
             If not, the built Response asks the next player for his color.
         """
-        """! @param _handler_input Contains methods to manipulate the session attributes and build the Response.
+        """! @param handler_input Contains methods to manipulate the session attributes and build the Response.
             @return Returns an Response obj which includes the generated Response
         """
         
-        _session_attr = _handler_input.attributes_manager.session_attributes
-        playerColor = _handler_input.request_envelope.request.intent.slots["color"].value
+        _session_attr = handler_input.attributes_manager.session_attributes
+        playerColor = handler_input.request_envelope.request.intent.slots["color"].value
         
         if not ("player" in _session_attr):                      # If no players are added yet, the first one gets added
             _i = 0
@@ -202,68 +206,68 @@ class AddPlayerIntentHandler(AbstractRequestHandler):
             _speech_text = ("Okay! Player "+ str(_i+2) +" which color do you want?")
             _reprompt = ("Player "+ str(_i+2) +" which color do you want?")
             
-        _handler_input.response_builder.speak(_speech_text).ask(_reprompt)
-        return _handler_input.response_builder.response
+        handler_input.response_builder.speak(_speech_text).ask(_reprompt)
+        return handler_input.response_builder.response
 
 class SetDifficultyIntentHandler(AbstractRequestHandler):
     """! Handler for setting the difficulty"""
     """! @param AbstractRequestHandler Extension of the class *AbstractRequestHandler*"""
 
-    def can_handle(self, _handler_input: HandlerInput) -> bool:
+    def can_handle(self, handler_input: HandlerInput) -> bool:
         """! Returns true if the Request inside the Handler Input has the session attribute *state* set to *waitingForDifficulty* 
             and the intent name is *SetDifficultyIntent*. 
         """
-        """! @param _handler_input Contains the session attribute and intent name.
+        """! @param handler_input Contains the session attribute and intent name.
             @return Returns an Boolean value
         """
         
-        _session_attr = _handler_input.attributes_manager.session_attributes
+        _session_attr = handler_input.attributes_manager.session_attributes
         
-        return ("state" in _session_attr) and (_session_attr["state"] == "waitingForDifficulty") and is_intent_name("SetDifficultyIntent")(_handler_input)
+        return ("state" in _session_attr) and (_session_attr["state"] == "waitingForDifficulty") and is_intent_name("SetDifficultyIntent")(handler_input)
         
-    def handle(self, _handler_input: HandlerInput) -> Response:
+    def handle(self, handler_input: HandlerInput) -> Response:
         """! Sets the session attribute *state* to *waitingForCategory*, adds the session attribute *difficulty* 
             and sets it to the value stated in the request. Also builds the Response to repeat the difficulty set.
         """
-        """! @param _handler_input Contains methods to manipulate the session attributes and build the Response.
+        """! @param handler_input Contains methods to manipulate the session attributes and build the Response.
             @return Returns an Response obj which includes the generated Response
         """
         
-        _session_attr = _handler_input.attributes_manager.session_attributes
-        difficulty = _handler_input.request_envelope.request.intent.slots["difficulty"].value
+        _session_attr = handler_input.attributes_manager.session_attributes
+        difficulty = handler_input.request_envelope.request.intent.slots["difficulty"].value
         _session_attr["difficulty"] = difficulty
         _session_attr["state"] = "waitingForCategory"
 
         _speech_text = f"The difficulty has been set to {difficulty}. Which categories do you want to use?"
         _reprompt = "Which categories do you want to use?"
 
-        _handler_input.response_builder.speak(_speech_text).ask(_reprompt)
-        return _handler_input.response_builder.response
+        handler_input.response_builder.speak(_speech_text).ask(_reprompt)
+        return handler_input.response_builder.response
 
 class SelectCategoryIntentHandler(AbstractRequestHandler):
     """! Handler for setting the categorys and starting the game"""
     """! @param AbstractRequestHandler Extension of the class *AbstractRequestHandler*"""
-    def can_handle(self, _handler_input: HandlerInput) -> bool:
+    def can_handle(self, handler_input: HandlerInput) -> bool:
         """! Returns true if the Request inside the Handler Input has the session attribute *state* set to *waitingForCategory* 
             and the intent name is *SelectCategoryIntent*. 
         """
-        """! @param _handler_input Contains the session attribute and intent name.
+        """! @param handler_input Contains the session attribute and intent name.
             @return Returns an Boolean value
         """
         
-        _session_attr = _handler_input.attributes_manager.session_attributes
+        _session_attr = handler_input.attributes_manager.session_attributes
         
-        return ("state" in _session_attr) and (_session_attr["state"] == "waitingForCategory") and is_intent_name("selectCategoryIntent")(_handler_input)
+        return ("state" in _session_attr) and (_session_attr["state"] == "waitingForCategory") and is_intent_name("selectCategoryIntent")(handler_input)
 
-    def handle(self, _handler_input: HandlerInput) -> Response:
-        """! \todo Sets the session attributes *state* to "question1", *categories* to the value got from _handler_input, 
+    def handle(self, handler_input: HandlerInput) -> Response:
+        """! \todo Sets the session attributes *state* to "question1", *categories* to the value got from handler_input, 
             builds the Response to announce that the game will start now and asks the first question.
         """
-        """! @param _handler_input Contains methods to manipulate the session attributes and build the Response."""
-        _alexa = _handler_input.response_builder
-        _session_attr = _handler_input.attributes_manager.session_attributes
+        """! @param handler_input Contains methods to manipulate the session attributes and build the Response."""
+        _alexa = handler_input.response_builder
+        _session_attr = handler_input.attributes_manager.session_attributes
         #_speech_text = "Which categories do you want to use?"
-        categories = _handler_input.request_envelope.request.intent.slot["category"].values
+        categories = handler_input.request_envelope.request.intent.slot["category"].values
         hucat = game.listCategoriesByName()
         selected_cats = []
         missing_cats = ""
@@ -285,92 +289,92 @@ class SelectCategoryIntentHandler(AbstractRequestHandler):
 class TellCategoriesIntentHandler(AbstractRequestHandler):
     """! Handler to tell which categories are avaible to choose"""
     """! @param AbstractRequestHandler Extension of the class *AbstractRequestHandler*"""
-    def can_handle(self, _handler_input: HandlerInput):
+    def can_handle(self, handler_input: HandlerInput):
         """! Returns true if the Request inside the Handler Input has the session attribute *state* set to *waitingForCategory* 
             and the intent name is *tellCategories*. 
         """
-        """! @param _handler_input Contains the session attribute and intent name.
+        """! @param handler_input Contains the session attribute and intent name.
             @return Returns an Boolean value
         """
-        _session_attr = _handler_input.attributes_manager.session_attributes
+        _session_attr = handler_input.attributes_manager.session_attributes
         
-        return ("state" in _session_attr) and (_session_attr["state"] == "waitingForCategory") and is_intent_name("tellCategories")(_handler_input)
+        return ("state" in _session_attr) and (_session_attr["state"] == "waitingForCategory") and is_intent_name("tellCategories")(handler_input)
 
-    def handle(self, _handler_input: HandlerInput):
+    def handle(self, handler_input: HandlerInput):
         """! \todo TODO"""
-        """! @param _handler_input Contains the methods to build the Response
+        """! @param handler_input Contains the methods to build the Response
             @return Returns an Response obj which includes the generated Response
         """
-        _session_attr = _handler_input.attributes_manager.session_attributes
+        _session_attr = handler_input.attributes_manager.session_attributes
         #_speech_text = "Which categories do you want to use?"
-        categories = _handler_input.request_envelope.request.intent.slot["category"].values
+        categories = handler_input.request_envelope.request.intent.slot["category"].values
         hucat = game.listCategoriesByName()
         _speech_text = "The following categories are available"
         for cat in hucat:
             _speech_text += cat['id'] + cat['name'] + ","
-        _handler_input.response_builder.speak(_speech_text)
-        return _handler_input.response_builder.response
+        handler_input.response_builder.speak(_speech_text)
+        return handler_input.response_builder.response
 
 class HelpIntentHandler(AbstractRequestHandler):
     """! Handler for Help Intent"""
     """! @param AbstractRequestHandler Extension of the class *AbstractRequestHandler*"""
 
-    def can_handle(self, _handler_input: HandlerInput) -> bool:
+    def can_handle(self, handler_input: HandlerInput) -> bool:
         """! Returns true if the Request inside the Handler Input has the intent name *AMAZON.HelpIntent*."""
-        """! @param _handler_input Contains the intent name.
+        """! @param handler_input Contains the intent name.
             @return Returns an Boolean value
         """
             
-        return is_intent_name("AMAZON.HelpIntent")(_handler_input)
+        return is_intent_name("AMAZON.HelpIntent")(handler_input)
 
-    def handle(self, _handler_input: HandlerInput) -> Response:
+    def handle(self, handler_input: HandlerInput) -> Response:
         """! \todo Builds Response that helps the user use the Skill correctly"""
-        """! @param _handler_input Contains the methods to build the Response
+        """! @param handler_input Contains the methods to build the Response
             @return Returns an Response obj which includes the generated Response
         """
         
-        return _handler_input.response_builder.response
+        return handler_input.response_builder.response
 
 class CancelOrStopIntentHandler(AbstractRequestHandler):
     """! Single handler for Cancel and Stop Intent"""
     """! @param AbstractRequestHandler Extension of the class *AbstractRequestHandler*"""
 
-    def can_handle(self, _handler_input: HandlerInput) -> bool:
+    def can_handle(self, handler_input: HandlerInput) -> bool:
         """! Returns true if the Request inside the Handler Input has the intent name *AMAZON.CancelIntent* or *AMAZON.StopIntent*."""
-        """! @param _handler_input Contains the intent name.
+        """! @param handler_input Contains the intent name.
             @return Returns an Boolean value
         """
         
-        return (is_intent_name("AMAZON.CancelIntent")(_handler_input) or
-                is_intent_name("AMAZON.StopIntent")(_handler_input))
+        return (is_intent_name("AMAZON.CancelIntent")(handler_input) or
+                is_intent_name("AMAZON.StopIntent")(handler_input))
 
-    def handle(self, _handler_input: HandlerInput) -> Response:
+    def handle(self, handler_input: HandlerInput) -> Response:
         """! Builds the Response that says goodbye to the user."""
-        """! @param _handler_input Contains the methods to build the Response
+        """! @param handler_input Contains the methods to build the Response
             @return Returns an Response obj which includes the generated Response
         """
         
         _speech_text = "Goodbye!"
 
-        _handler_input.response_builder.speak(_speech_text)
-        return _handler_input.response_builder.response
+        handler_input.response_builder.speak(_speech_text)
+        return handler_input.response_builder.response
 
 
 class FallbackIntentHandler(AbstractRequestHandler):
     """! This handler will not be triggered except in supported locales, so it is safe to deploy on any locale"""
     """! @param AbstractRequestHandler Extension of the class *AbstractRequestHandler*"""
 
-    def can_handle(self, _handler_input: HandlerInput) -> bool:
+    def can_handle(self, handler_input: HandlerInput) -> bool:
         """! Returns true if the Request inside the Handler Input has the intent name *AMAZON.FallbackIntent*."""
-        """! @param _handler_input Contains the intent name.
+        """! @param handler_input Contains the intent name.
             @return Returns an Boolean value
         """
         
-        return is_intent_name("AMAZON.FallbackIntent")(_handler_input)
+        return is_intent_name("AMAZON.FallbackIntent")(handler_input)
 
-    def handle(self, _handler_input: HandlerInput) -> Response:
+    def handle(self, handler_input: HandlerInput) -> Response:
         """! Builds the Response that the Skill dont know what to do"""
-        """! @param _handler_input Contains the methods to build the Response
+        """! @param handler_input Contains the methods to build the Response
             @return Returns an Response obj which includes the generated Response
         """
         
@@ -378,57 +382,57 @@ class FallbackIntentHandler(AbstractRequestHandler):
             "The Trivial Pursuit skill can't help you with that. "
             "You can say help")
         _reprompt = "If you need help just say so"
-        _handler_input.response_builder.speak(_speech_text).ask(_reprompt)
-        return _handler_input.response_builder.response
+        handler_input.response_builder.speak(_speech_text).ask(_reprompt)
+        return handler_input.response_builder.response
 
 
 class SessionEndedRequestHandler(AbstractRequestHandler):
     """! Handler for Session End"""
     """! @param AbstractRequestHandler Extension of the class *AbstractRequestHandler*"""
 
-    def can_handle(self, _handler_input: HandlerInput) -> bool:
+    def can_handle(self, handler_input: HandlerInput) -> bool:
         """! Returns true if the Request inside the Handler Input is from type *SessionEndedRequest*."""
-        """! @param _handler_input Contains the request type.
+        """! @param handler_input Contains the request type.
             @return Returns an Boolean value
         """
         
-        return is_request_type("SessionEndedRequest")(_handler_input)
+        return is_request_type("SessionEndedRequest")(handler_input)
 
-    def handle(self, _handler_input: HandlerInput) -> Response:
+    def handle(self, handler_input: HandlerInput) -> Response:
         """! \todo Handler for clean up tasks after stop of the programm"""
-        """! @param _handler_input Contains the methods to build the Response
+        """! @param handler_input Contains the methods to build the Response
             @return Returns an Response obj which includes the generated Response
         """
         
-        return _handler_input.response_builder.response
+        return handler_input.response_builder.response
 
 
 class CatchAllExceptionHandler(AbstractExceptionHandler):
     """! Catch all exception handler and respond with custom message"""
     """! @param AbstractRequestHandler Extension of the class *AbstractRequestHandler*"""
 
-    def can_handle(self, _handler_input: HandlerInput, exception) -> bool:
+    def can_handle(self, handler_input: HandlerInput, exception) -> bool:
         """! Always returns true because it only gets called if an exception occurs"""
-        """! @param _handler_input    Contains the request type.
+        """! @param handler_input    Contains the request type.
             @param exception        Contains the thrown exception.
             @return Returns the Boolean value *true*
         """
         
         return True
 
-    def handle(self, _handler_input: HandlerInput, exception) -> Response:
+    def handle(self, handler_input: HandlerInput, exception) -> Response:
         """! Builds the Response that a problem has occured"""
-        """! @param _handler_input    Contains the methods to build the Response
+        """! @param handler_input    Contains the methods to build the Response
             @param exception        Contains the thrown exception
             @return Returns an Response obj which includes the generated Response
         """
         
         _speech_text = "Sorry, there was some problem. Please try again!!"
-        _handler_input.response_builder.speak(_speech_text).ask(_speech_text)
+        handler_input.response_builder.speak(_speech_text).ask(_speech_text)
 
-        return _handler_input.response_builder.response
+        return handler_input.response_builder.response
 
-def main(_req: func.HttpRequest) -> func.HttpResponse:
+def main(req: func.HttpRequest) -> func.HttpResponse:
     """! The main function initialises the Skill with all avaible handlers and validates that the request was meant for this specific skill. 
         It also converts incomming HTTP headers and bodys into native format of dict and str and vice versa
     """
@@ -437,7 +441,7 @@ def main(_req: func.HttpRequest) -> func.HttpResponse:
     """
     
     _sb = SkillBuilder()
-    _sb.skill_id = os.environ["skill_id"]
+    _sb.skill_id = os.environ["SKILL_ID"]
     
     _sb.add_request_handler(LaunchRequestHandler())
     _sb.add_request_handler(YesIntentHandler())
@@ -454,6 +458,6 @@ def main(_req: func.HttpRequest) -> func.HttpResponse:
     _sb.add_exception_handler(CatchAllExceptionHandler())
     
     _webservice_handler = WebserviceSkillHandler(skill=_sb.create())
-    _response = _webservice_handler.verify_request_and_dispatch(_req.headers, _req.get_body().decode("utf-8"))
+    response = _webservice_handler.verify_request_and_dispatch(req.headers, req.get_body().decode("utf-8"))
     
-    return func.HttpResponse(json.dumps(_response),mimetype="application/json")
+    return func.HttpResponse(json.dumps(response),mimetype="application/json")

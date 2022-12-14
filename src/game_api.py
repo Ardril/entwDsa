@@ -6,7 +6,7 @@
 # @brief API-managing file
 #    
 # @section description_game_api Description
-# Code in this file manages the API calls to get the requested questions
+# Code in this file manages the API call to get the requested questions, contains the game logic and utility functions
 #
 # @section notes_game_api Notes
 # For code in this file, theres only a automaticly created doxygen documentation for now
@@ -241,8 +241,5 @@ class trivia():
         result = json.loads(resp.json)
         questions = result["results"]
 
-
-
-
-
-g = trivia()
+if __name__ == "__main__":
+    g = trivia()
