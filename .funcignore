@@ -5,3 +5,4 @@ test
 .venv
 doc
 README.md
+tests
