@@ -11,6 +11,14 @@
 # - Written in Python
 # - Code hosted on a Microsoft Azure Functions server
 # - This project is under active development
+#
+# @section todo_main TODO
+# - Implement game logic
+#
+# @section author_main Authors
+# - Justin Stahl
+# - Niklas Klemens
+# - Felicitas Fuhrmann
 
 ##
 # @file app.py
@@ -20,7 +28,7 @@
 # @section description_app Description
 # The pillar of the entire programm, containing the main-method, all Intent-Handler and the entire game logic.
 #    
-# @section libraries_main Libraries/Modules
+# @section libraries_app Libraries/Modules
 # - ask_sdk_core (components)
 #   - Needed for all handlers
 # - ask_sdk_model (component)
@@ -35,14 +43,6 @@
 #   - Acces to environment variables on Azure Functions server
 # - game_api
 #   - Local import; manages api call and contains game logic and utility functions
-#  
-# @section todo_app TODO
-# - Implement game logic
-#    
-# @section author_app Authors
-# - Justin Stahl
-# - Niklas Klemens
-# - Felicitas Fuhrmann
 
 from ask_sdk_core.skill_builder import SkillBuilder
 from ask_sdk_core.dispatch_components import AbstractRequestHandler, AbstractExceptionHandler

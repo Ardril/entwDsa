@@ -11,7 +11,7 @@
 # @section notes_game_api Notes
 # For code in this file, theres only a automaticly created doxygen documentation for now
 #
-# @section libraries_main Libraries/Modules
+# @section libraries_game_api Libraries/Modules
 # - requests
 #   - Needed to send HTTP-requests to the API
 # - json
