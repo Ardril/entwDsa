@@ -6,4 +6,4 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: sudo apt-get install doxygen
-      - run: doxygen doc/doxygen/Doxyfile
+      - run: cd doc/doxygen/; doxygen
