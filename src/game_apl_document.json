@@ -1,0 +1,117 @@
+{
+    "document": {
+        "type": "APL",
+        "version": "2022.1",
+        "license": "Copyright 2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.\nSPDX-License-Identifier: LicenseRef-.amazon.com.-AmznSL-1.0\nLicensed under the Amazon Software License  http://aws.amazon.com/asl/",
+        "settings": {},
+        "theme": "dark",
+        "import": [
+            {
+                "name": "alexa-layouts",
+                "version": "1.5.0"
+            }
+        ],
+        "resources": [],
+        "styles": {},
+        "onMount": [],
+        "graphics": {},
+        "commands": {},
+        "layouts": {},
+        "mainTemplate": {
+            "parameters": [
+                "payload"
+            ],
+            "items": [
+                {
+                    "type": "Container",
+                    "items": [
+                        {
+                            "type": "AlexaBackground",
+                            "backgroundColor": "lightblue"
+                        },
+                        {
+                            "fontStyle": "normal",
+                            "text": "Player X",
+                            "fontWeight": "normal",
+                            "fontSize": "7vh",
+                            "type": "Text",
+                            "id": "PlayerName",
+                            "width": "25vw",
+                            "height": "10vh",
+                            "padding": 5,
+                            "alignSelf": "start",
+                            "position": "absolute"
+                        },
+                        {
+                            "textAlign": "center",
+                            "layoutDirection": "inherit",
+                            "text": "Current Question:",
+                            "fontSize": "7vh",
+                            "id": "question",
+                            "type": "Text",
+                            "width": "60vw",
+                            "alignSelf": "end",
+                            "position": "relative",
+                            "right": "15"
+                        },
+                        {
+                            "source": "https://dsatrivialpursuit.blob.core.windows.net/png/player_card_darkblue.png",
+                            "type": "Image",
+                            "id": "PlayerPic",
+                            "width": "25vw",
+                            "height": "25vh",
+                            "position": "relative",
+                            "spacing": "10vh"
+                        },
+                        {
+                            "textAlign": "center",
+                            "textAlignVertical": "center",
+                            "layoutDirection": "inherit",
+                            "text": "Das hier ist eine tolle Frage die du jetzt beantworten musst:",
+                            "fontSize": "10vh",
+                            "type": "Text",
+                            "width": "60vw",
+                            "height": "30vh",
+                            "padding": 10,
+                            "paddingTop": "15vh",
+                            "alignSelf": "center",
+                            "position": "absolute",
+                            "top": "100",
+                            "right": "10"
+                        },
+                        {
+                            "text": "Current Points:",
+                            "fontSize": "7vh",
+                            "type": "Text",
+                            "padding": 5,
+                            "spacing": "10vh"
+                        },
+                        {
+                            "text": "X: y",
+                            "fontSize": "5vh",
+                            "textAlignVertical": "auto",
+                            "textAlign": "auto",
+                            "type": "Text",
+                            "paddingStart": "20"
+                        },
+                        {
+                            "text": "X: y",
+                            "fontSize": "5vh",
+                            "type": "Text",
+                            "paddingStart": "20"
+                        },
+                        {
+                            "text": "X: y",
+                            "fontSize": "5vh",
+                            "type": "Text",
+                            "padding": 5,
+                            "paddingStart": "20"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    "datasources": {},
+    "sources": {}
+}

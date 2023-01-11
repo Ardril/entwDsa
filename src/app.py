@@ -43,10 +43,11 @@
 
 from ask_sdk_core.skill_builder import SkillBuilder
 from ask_sdk_core.dispatch_components import AbstractRequestHandler, AbstractExceptionHandler
-from ask_sdk_core.utils import is_request_type, is_intent_name
+from ask_sdk_core.utils import is_request_type, is_intent_name, get_supported_interfaces
 from ask_sdk_core.handler_input import HandlerInput
 from ask_sdk_model import Response
 from ask_sdk_webservice_support.webservice_handler import WebserviceSkillHandler
+from ask_sdk_model.interfaces.alexa.presentation.apl.render_document_directive import RenderDocumentDirective
 import azure.functions as func
 import json
 import os
@@ -55,6 +56,106 @@ import game_api
 global game 
 game = game_api.trivia()
 
+CAT_DATASOURCE = {
+    "trivia_categories": [
+            {
+                "id": 9,
+                "name": "General Knowledge"
+            },
+            {
+                "id": 10,
+                "name": "Entertainment: Books"
+            },
+            {
+                "id": 11,
+                "name": "Entertainment: Film"
+            },
+            {
+                "id": 12,
+                "name": "Entertainment: Music"
+            },
+            {
+                "id": 13,
+                "name": "Entertainment: Musicals & Theatres"
+            },
+            {
+                "id": 14,
+                "name": "Entertainment: Television"
+            },
+            {
+                "id": 15,
+                "name": "Entertainment: Video Games"
+            },
+            {
+                "id": 16,
+                "name": "Entertainment: Board Games"
+            },
+            {
+                "id": 17,
+                "name": "Science & Nature"
+            },
+            {
+                "id": 18,
+                "name": "Science: Computers"
+            },
+            {
+                "id": 19,
+                "name": "Science: Mathematics"
+            },
+            {
+                "id": 20,
+                "name": "Mythology"
+            },
+            {
+                "id": 21,
+                "name": "Sports"
+            },
+            {
+                "id": 22,
+                "name": "Geography"
+            },
+            {
+                "id": 23,
+                "name": "History"
+            },
+            {
+                "id": 24,
+                "name": "Politics"
+            },
+            {
+                "id": 25,
+                "name": "Art"
+            },
+            {
+                "id": 26,
+                "name": "Celebrities"
+            },
+            {
+                "id": 27,
+                "name": "Animals"
+            },
+            {
+                "id": 28,
+                "name": "Vehicles"
+            },
+            {
+                "id": 29,
+                "name": "Entertainment: Comics"
+            },
+            {
+                "id": 30,
+                "name": "Science: Gadgets"
+            },
+            {
+                "id": 31,
+                "name": "Entertainment: Japanese Anime & Manga"
+            },
+            {
+                "id": 32,
+                "name": "Entertainment: Cartoon & Animations"
+            }
+        ]
+        }
 class LaunchRequestHandler(AbstractRequestHandler):
     """! Handler for Skill Launch"""
     """! @param AbstractRequestHandler Extension of the class *AbstractRequestHandler*"""
@@ -64,8 +165,8 @@ class LaunchRequestHandler(AbstractRequestHandler):
         """! @param handler_input Contains the request type.
             @return Returns an Boolean value
         """
-    
-        return is_request_type("LaunchRequest")(handler_input)
+
+        return is_request_type("LaunchRequest")(handler_input) or is_request_type("LaunchIntent")(handler_input)
 
     def handle(self, handler_input: HandlerInput) -> Response:
         """! Adds the session attribute *state* and sets it to *introduced*. Also the Response gets built to greet the user and asks if the game should start."""
@@ -80,7 +181,7 @@ class LaunchRequestHandler(AbstractRequestHandler):
         reprompt = "If you need help, just say so"
 
         handler_input.response_builder.speak(speech_text).ask(reprompt)
-        return handler_input.response_builder.response
+        return (handler_input.response_builder.response)
 
 
 class YesIntentHandler(AbstractRequestHandler):
@@ -234,10 +335,51 @@ class SetDifficultyIntentHandler(AbstractRequestHandler):
         session_attr["difficulty"] = difficulty
         session_attr["state"] = "waitingForCategory"
 
-        speech_text = f"The difficulty has been set to {difficulty}. Which categories do you want to use?"
-        reprompt = "Which categories do you want to use?"
+        speech_text = f"The difficulty has been set to {difficulty}. Which categories do you want to use? Just say 'categories' and i will list them for you."
+        reprompt = "Which categories do you want to use? "
 
         handler_input.response_builder.speak(speech_text).ask(reprompt)
+        return handler_input.response_builder.response
+
+class ListCategoriesHandler(AbstractRequestHandler):
+
+    def can_handle(self, handler_input: HandlerInput) -> bool:
+        """! Returns true if the Request inside the Handler Input has the session attribute *state* set to *waitingForCategory* 
+            and the intent name is *SelectCategoryIntent*. 
+        """
+        """! @param handler_input Contains the session attribute and intent name.
+            @return Returns an Boolean value
+        """
+        
+        session_attr = handler_input.attributes_manager.session_attributes
+        return ("state" in session_attr) and (session_attr["state"] == "waitingForCategory") and is_intent_name("listCategoriesIntent")(handler_input)
+
+    def supports_apl(self, handler_input):
+        supported_ifaces = get_supported_interfaces(handler_input)
+        return supported_ifaces.alexa_presentation_apl != None
+
+    def launch_screen(self,handler_input):
+        if self.supports_apl(handler_input):
+            handler_input.response_builder.add_directive(
+                RenderDocumentDirective(
+                    token="documentToken",
+                    document={
+
+                        "type": "Link",
+                        "src": "doc://alexa/apl/documents/Categories"
+                    },
+                    datasources=CAT_DATASOURCE
+                )
+            )
+
+    def handle(self, handler_input: HandlerInput) -> Response:
+
+        alexa = handler_input.response_builder
+        session_attr = handler_input.attributes_manager.session_attributes
+        self.launch_screen(handler_input)
+        
+
+
         return handler_input.response_builder.response
 
 class SelectCategoryIntentHandler(AbstractRequestHandler):
@@ -446,6 +588,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     sb.add_request_handler(SetDifficultyIntentHandler())
     sb.add_request_handler(SelectCategoryIntentHandler())
     sb.add_request_handler(TellCategoriesIntentHandler())
+    sb.add_request_handler(ListCategoriesHandler())
     sb.add_request_handler(HelpIntentHandler())
     sb.add_request_handler(CancelOrStopIntentHandler())
     sb.add_request_handler(FallbackIntentHandler())

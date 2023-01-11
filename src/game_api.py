@@ -105,7 +105,7 @@ class trivia():
         self._TOKEN = resp['token']
         self.buildCategories()
         self._game = game()
-        print(self.listCategoriesByName())
+
 
     def setupNewGame(self,game : game):
         
@@ -116,7 +116,7 @@ class trivia():
     def buildCategories(self):
         categoryResponse = requests.get("https://opentdb.com/api_category.php").json()
         self._categories = deepcopy(categoryResponse['trivia_categories'])
-        print(str(type(self._categories)))
+        #print(str(type(self._categories)))
         return self._categories
     
     def listCategoriesByName(self):
@@ -243,8 +243,3 @@ class trivia():
         result = json.loads(resp.json)
         questions = result["results"]
 
-
-
-
-
-g = trivia()

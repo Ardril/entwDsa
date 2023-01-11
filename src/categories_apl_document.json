@@ -1,0 +1,320 @@
+{
+    "document": {
+        "type": "APL",
+        "version": "2022.2",
+        "import": [
+            {
+                "name": "alexa-layouts",
+                "version": "1.5.0"
+            }
+        ],
+        "mainTemplate": {
+            "parameters": [
+                "trivia_categories"
+            ],
+            "items": [
+                {
+                    "items": [
+                        {
+                            "text": "${trivia_categories[0].name}",
+                            "textAlign": "center",
+                            "fontSize": "4vh",
+                            "type": "Text",
+                            "width": "33%",
+                            "height": "12%"
+                        },
+                        {
+                            "type": "Text",
+                            "text": "${trivia_categories[1].name}",
+                            "fontSize": "4vh",
+                            "height": "12%",
+                            "width": "33%",
+                            "textAlign": "center"
+                        },
+                        {
+                            "type": "Text",
+                            "text": "${trivia_categories[2].name}",
+                            "fontSize": "4vh",
+                            "height": "12%",
+                            "width": "33%",
+                            "textAlign": "center"
+                        },
+                        {
+                            "type": "Text",
+                            "text": "${trivia_categories[3].name}",
+                            "fontSize": "4vh",
+                            "height": "12%",
+                            "width": "33%",
+                            "textAlign": "center"
+                        },
+                        {
+                            "type": "Text",
+                            "text": "${trivia_categories[4].name}",
+                            "fontSize": "4vh",
+                            "height": "12%",
+                            "width": "33%",
+                            "textAlign": "center"
+                        },
+                        {
+                            "type": "Text",
+                            "text": "${trivia_categories[5].name}",
+                            "fontSize": "4vh",
+                            "height": "12%",
+                            "width": "33%",
+                            "textAlign": "center"
+                        },
+                        {
+                            "type": "Text",
+                            "text": "${trivia_categories[6].name}",
+                            "fontSize": "4vh",
+                            "height": "12%",
+                            "width": "33%",
+                            "textAlign": "center"
+                        },
+                        {
+                            "type": "Text",
+                            "text": "${trivia_categories[7].name}",
+                            "fontSize": "4vh",
+                            "height": "12%",
+                            "width": "33%",
+                            "textAlign": "center"
+                        },
+                        {
+                            "type": "Text",
+                            "text": "${trivia_categories[8].name}",
+                            "fontSize": "4vh",
+                            "height": "12%",
+                            "width": "33%",
+                            "textAlign": "center"
+                        },
+                        {
+                            "type": "Text",
+                            "text": "${trivia_categories[9].name}",
+                            "fontSize": "4vh",
+                            "height": "12%",
+                            "width": "33%",
+                            "textAlign": "center"
+                        },
+                        {
+                            "type": "Text",
+                            "text": "${trivia_categories[10].name}",
+                            "fontSize": "4vh",
+                            "height": "12%",
+                            "width": "33%",
+                            "textAlign": "center"
+                        },
+                        {
+                            "type": "Text",
+                            "text": "${trivia_categories[11].name}",
+                            "fontSize": "4vh",
+                            "height": "12%",
+                            "width": "33%",
+                            "textAlign": "center"
+                        },
+                        {
+                            "type": "Text",
+                            "text": "${trivia_categories[12].name}",
+                            "fontSize": "4vh",
+                            "height": "12%",
+                            "width": "33%",
+                            "textAlign": "center"
+                        },
+                        {
+                            "type": "Text",
+                            "text": "${trivia_categories[13].name}",
+                            "fontSize": "4vh",
+                            "height": "12%",
+                            "width": "33%",
+                            "textAlign": "center"
+                        },
+                        {
+                            "type": "Text",
+                            "text": "${trivia_categories[14].name}",
+                            "fontSize": "4vh",
+                            "height": "12%",
+                            "width": "33%",
+                            "textAlign": "center"
+                        },
+                        {
+                            "type": "Text",
+                            "text": "${trivia_categories[15].name}",
+                            "fontSize": "4vh",
+                            "height": "12%",
+                            "width": "33%",
+                            "textAlign": "center"
+                        },
+                        {
+                            "type": "Text",
+                            "text": "${trivia_categories[16].name}",
+                            "fontSize": "4vh",
+                            "height": "12%",
+                            "width": "33%",
+                            "textAlign": "center"
+                        },
+                        {
+                            "type": "Text",
+                            "text": "${trivia_categories[17].name}",
+                            "fontSize": "4vh",
+                            "height": "12%",
+                            "width": "33%",
+                            "textAlign": "center"
+                        },
+                        {
+                            "type": "Text",
+                            "text": "${trivia_categories[18].name}",
+                            "fontSize": "4vh",
+                            "height": "12%",
+                            "width": "33%",
+                            "textAlign": "center"
+                        },
+                        {
+                            "type": "Text",
+                            "text": "${trivia_categories[19].name}",
+                            "fontSize": "4vh",
+                            "height": "12%",
+                            "width": "33%",
+                            "textAlign": "center"
+                        },
+                        {
+                            "type": "Text",
+                            "text": "${trivia_categories[20].name}",
+                            "fontSize": "4vh",
+                            "height": "12%",
+                            "width": "33%",
+                            "textAlign": "center"
+                        },
+                        {
+                            "type": "Text",
+                            "text": "${trivia_categories[21].name}",
+                            "fontSize": "4vh",
+                            "height": "12%",
+                            "width": "33%",
+                            "textAlign": "center"
+                        },
+                        {
+                            "type": "Text",
+                            "text": "${trivia_categories[22].name}",
+                            "fontSize": "4vh",
+                            "height": "12%",
+                            "width": "33%",
+                            "textAlign": "center"
+                        },
+                        {
+                            "type": "Text",
+                            "text": "${trivia_categories[23].name}",
+                            "fontSize": "4vh",
+                            "height": "12%",
+                            "width": "33%",
+                            "textAlign": "center"
+                        }
+                    ],
+                    "wrap": "wrap",
+                    "direction": "row",
+                    "type": "Container",
+                    "width": "auto",
+                    "height": "auto"
+                }
+            ]
+        }
+    },
+    "datasources": {
+        "trivia_categories": [
+            {
+                "id": 9,
+                "name": "General Knowledge"
+            },
+            {
+                "id": 10,
+                "name": "Entertainment: Books"
+            },
+            {
+                "id": 11,
+                "name": "Entertainment: Film"
+            },
+            {
+                "id": 12,
+                "name": "Entertainment: Music"
+            },
+            {
+                "id": 13,
+                "name": "Entertainment: Musicals & Theatres"
+            },
+            {
+                "id": 14,
+                "name": "Entertainment: Television"
+            },
+            {
+                "id": 15,
+                "name": "Entertainment: Video Games"
+            },
+            {
+                "id": 16,
+                "name": "Entertainment: Board Games"
+            },
+            {
+                "id": 17,
+                "name": "Science & Nature"
+            },
+            {
+                "id": 18,
+                "name": "Science: Computers"
+            },
+            {
+                "id": 19,
+                "name": "Science: Mathematics"
+            },
+            {
+                "id": 20,
+                "name": "Mythology"
+            },
+            {
+                "id": 21,
+                "name": "Sports"
+            },
+            {
+                "id": 22,
+                "name": "Geography"
+            },
+            {
+                "id": 23,
+                "name": "History"
+            },
+            {
+                "id": 24,
+                "name": "Politics"
+            },
+            {
+                "id": 25,
+                "name": "Art"
+            },
+            {
+                "id": 26,
+                "name": "Celebrities"
+            },
+            {
+                "id": 27,
+                "name": "Animals"
+            },
+            {
+                "id": 28,
+                "name": "Vehicles"
+            },
+            {
+                "id": 29,
+                "name": "Entertainment: Comics"
+            },
+            {
+                "id": 30,
+                "name": "Science: Gadgets"
+            },
+            {
+                "id": 31,
+                "name": "Entertainment: Japanese Anime & Manga"
+            },
+            {
+                "id": 32,
+                "name": "Entertainment: Cartoon & Animations"
+            }
+        ]
+    }
+}
