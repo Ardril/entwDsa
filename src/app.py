@@ -10,6 +10,15 @@
 # @section notes_main Notes
 # - Written in Python
 # - Code hosted on a Microsoft Azure Functions server
+# - This project is under active development
+#
+# @section todo_main TODO
+# - Implement game logic
+#
+# @section author_main Authors
+# - Justin Stahl
+# - Niklas Klemens
+# - Felicitas Fuhrmann
 
 ##
 # @file app.py
@@ -19,7 +28,7 @@
 # @section description_app Description
 # The pillar of the entire programm, containing the main-method, all Intent-Handler and the entire game logic.
 #    
-# @section libraries_main Libraries/Modules
+# @section libraries_app Libraries/Modules
 # - ask_sdk_core (components)
 #   - Needed for all handlers
 # - ask_sdk_model (component)
@@ -32,14 +41,8 @@
 #   - Needed to convert Response -> HTTP
 # - os
 #   - Acces to environment variables on Azure Functions server
-#  
-# @section todo_app TODO
-# - Implement game logic
-#    
-# @section author_app Authors
-# - Justin Stahl
-# - Niklas Klemens
-# - Felicitas Fuhrmann
+# - game_api
+#   - Local import; manages api call and contains game logic and utility functions
 
 from ask_sdk_core.skill_builder import SkillBuilder
 from ask_sdk_core.dispatch_components import AbstractRequestHandler, AbstractExceptionHandler
@@ -51,9 +54,10 @@ from ask_sdk_model.interfaces.alexa.presentation.apl.render_document_directive i
 import azure.functions as func
 import json
 import os
-import game_api
 
-global game 
+# Local import
+from src import game_api
+
 game = game_api.trivia()
 
 CAT_DATASOURCE = {
@@ -174,14 +178,14 @@ class LaunchRequestHandler(AbstractRequestHandler):
             @return Returns an Response obj which includes the generated Response
         """
         
-        session_attr = handler_input.attributes_manager.session_attributes
-        session_attr["state"] = "introduced"
+        _session_attr = handler_input.attributes_manager.session_attributes
+        _session_attr["state"] = "introduced"
         
-        speech_text = "Welcome to our Trivial Pursuit Game. Would you like to start a game?"
-        reprompt = "If you need help, just say so"
+        _speech_text = "Welcome to our Trivial Pursuit Game. Would you like to start a game?"
+        _reprompt = "If you need help, just say so"
 
-        handler_input.response_builder.speak(speech_text).ask(reprompt)
-        return (handler_input.response_builder.response)
+        handler_input.response_builder.speak(_speech_text).ask(_reprompt)
+        return handler_input.response_builder.response
 
 
 class YesIntentHandler(AbstractRequestHandler):
@@ -202,15 +206,15 @@ class YesIntentHandler(AbstractRequestHandler):
             @return Returns an Response obj which includes the generated Response
         """
         
-        session_attr = handler_input.attributes_manager.session_attributes
-        if ("state" in session_attr) and (session_attr["state"] == "introduced"):
-            session_attr["state"] = "waitingForPlayerCount"
-            session_attr["playerCount"] = 0
+        _session_attr = handler_input.attributes_manager.session_attributes
+        if ("state" in _session_attr) and (_session_attr["state"] == "introduced"):
+            _session_attr["state"] = "waitingForPlayerCount"
+            _session_attr["playerCount"] = 0
             
-            speech_text = "Thats cool! How many players are you?"
-            reprompt = "How many players are you?"
+            _speech_text = "Thats cool! How many players are you?"
+            _reprompt = "How many players are you?"
             
-            handler_input.response_builder.speak(speech_text).ask(reprompt)
+            handler_input.response_builder.speak(_speech_text).ask(_reprompt)
             return handler_input.response_builder.response
 
 class NumberOfPlayersIntentHandler(AbstractRequestHandler):
@@ -225,9 +229,9 @@ class NumberOfPlayersIntentHandler(AbstractRequestHandler):
             @return Returns an Boolean value
         """
         
-        session_attr = handler_input.attributes_manager.session_attributes
+        _session_attr = handler_input.attributes_manager.session_attributes
         
-        return ("state" in session_attr) and (session_attr["state"] == "waitingForPlayerCount") and is_intent_name("NumberOfPlayersIntent")(handler_input)
+        return ("state" in _session_attr) and (_session_attr["state"] == "waitingForPlayerCount") and is_intent_name("NumberOfPlayersIntent")(handler_input)
     
     def handle(self, handler_input: HandlerInput) -> Response:
         """! Sets the session attribute *state* to *waitingForPlayerNames*, adds the session attribute *playerCount* 
@@ -237,18 +241,18 @@ class NumberOfPlayersIntentHandler(AbstractRequestHandler):
             @return Returns an Response obj which includes the generated Response
         """
         
-        session_attr = handler_input.attributes_manager.session_attributes
-        session_attr["state"] = "waitingForPlayerColor"
+        _session_attr = handler_input.attributes_manager.session_attributes
+        _session_attr["state"] = "waitingForPlayerColor"
         playerCount = int(handler_input.request_envelope.request.intent.slots["count"].value)
-        session_attr["playerCount"] = playerCount
+        _session_attr["playerCount"] = playerCount
         
         if playerCount > 1:
-            speech_text = "Okay. Player one, which color do you want?"
+            _speech_text = "Okay. Player one, which color do you want?"
         else:
-            speech_text = "Okay. Which color do you want?"
-        reprompt = "Which color do you want?"
+            _speech_text = "Okay. Which color do you want?"
+        _reprompt = "Which color do you want?"
         
-        handler_input.response_builder.speak(speech_text).ask(reprompt)
+        handler_input.response_builder.speak(_speech_text).ask(_reprompt)
         return handler_input.response_builder.response
 
 class AddPlayerIntentHandler(AbstractRequestHandler):
@@ -263,9 +267,9 @@ class AddPlayerIntentHandler(AbstractRequestHandler):
             @return Returns an Boolean value
         """
         
-        session_attr = handler_input.attributes_manager.session_attributes
+        _session_attr = handler_input.attributes_manager.session_attributes
         
-        return ("state" in session_attr) and (session_attr["state"] == "waitingForPlayerColor") and is_intent_name("AddPlayerIntent")(handler_input)
+        return ("state" in _session_attr) and (_session_attr["state"] == "waitingForPlayerColor") and is_intent_name("AddPlayerIntent")(handler_input)
     
     def handle(self, handler_input: HandlerInput) -> Response:
         """! Appends a new player with his stated color from the request to the session attribute *player*, which is a dictionary. 
@@ -277,33 +281,33 @@ class AddPlayerIntentHandler(AbstractRequestHandler):
             @return Returns an Response obj which includes the generated Response
         """
         
-        session_attr = handler_input.attributes_manager.session_attributes
+        _session_attr = handler_input.attributes_manager.session_attributes
         playerColor = handler_input.request_envelope.request.intent.slots["color"].value
         
-        if not ("player" in session_attr):                      # If no players are added yet, the first one gets added
+        if not ("player" in _session_attr):                      # If no players are added yet, the first one gets added
             _i = 0
-            session_attr["player"] = {
+            _session_attr["player"] = {
                 "0": {
                     "color": playerColor,
                     "score": 0,
                 },
             }
         else:
-            _i = len(session_attr["player"])                    # if at least one player is added yet, the next one gets added
-            session_attr["player"][str(_i)] = {
+            _i = len(_session_attr["player"])                    # if at least one player is added yet, the next one gets added
+            _session_attr["player"][str(_i)] = {
                 "color": playerColor,
                 "score": 0,
             }
-        if _i == (session_attr["playerCount"] - 1):             # If all players are added now
-            session_attr["state"] = "waitingForDifficulty"
+        if _i == (_session_attr["playerCount"] - 1):             # If all players are added now
+            _session_attr["state"] = "waitingForDifficulty"
             
-            speech_text = "Okay! Now that we are all present, on which difficulty do you want to play?"
-            reprompt = "On which difficulty do you want to play?"
+            _speech_text = "Okay! Now that we are all present, on which difficulty do you want to play?"
+            _reprompt = "On which difficulty do you want to play?"
         else:
-            speech_text = ("Okay! Player "+ str(_i+2) +" which color do you want?")
-            reprompt = ("Player "+ str(_i+2) +" which color do you want?")
+            _speech_text = ("Okay! Player "+ str(_i+2) +" which color do you want?")
+            _reprompt = ("Player "+ str(_i+2) +" which color do you want?")
             
-        handler_input.response_builder.speak(speech_text).ask(reprompt)
+        handler_input.response_builder.speak(_speech_text).ask(_reprompt)
         return handler_input.response_builder.response
 
 class SetDifficultyIntentHandler(AbstractRequestHandler):
@@ -318,9 +322,9 @@ class SetDifficultyIntentHandler(AbstractRequestHandler):
             @return Returns an Boolean value
         """
         
-        session_attr = handler_input.attributes_manager.session_attributes
+        _session_attr = handler_input.attributes_manager.session_attributes
         
-        return ("state" in session_attr) and (session_attr["state"] == "waitingForDifficulty") and is_intent_name("SetDifficultyIntent")(handler_input)
+        return ("state" in _session_attr) and (_session_attr["state"] == "waitingForDifficulty") and is_intent_name("SetDifficultyIntent")(handler_input)
         
     def handle(self, handler_input: HandlerInput) -> Response:
         """! Sets the session attribute *state* to *waitingForCategory*, adds the session attribute *difficulty* 
@@ -330,15 +334,15 @@ class SetDifficultyIntentHandler(AbstractRequestHandler):
             @return Returns an Response obj which includes the generated Response
         """
         
-        session_attr = handler_input.attributes_manager.session_attributes
+        _session_attr = handler_input.attributes_manager.session_attributes
         difficulty = handler_input.request_envelope.request.intent.slots["difficulty"].value
         session_attr["difficulty"] = difficulty
         session_attr["state"] = "waitingForCategory"
 
-        speech_text = f"The difficulty has been set to {difficulty}. Which categories do you want to use? Just say 'categories' and i will list them for you."
-        reprompt = "Which categories do you want to use? "
+        speech_text = f"The difficulty has been set to {difficulty}. Which categories do you want to use?"
+        reprompt = "Which categories do you want to use?"
 
-        handler_input.response_builder.speak(speech_text).ask(reprompt)
+        handler_input.response_builder.speak(_speech_text).ask(_reprompt)
         return handler_input.response_builder.response
 
 class ListCategoriesHandler(AbstractRequestHandler):
@@ -393,18 +397,18 @@ class SelectCategoryIntentHandler(AbstractRequestHandler):
             @return Returns an Boolean value
         """
         
-        session_attr = handler_input.attributes_manager.session_attributes
+        _session_attr = handler_input.attributes_manager.session_attributes
         
-        return ("state" in session_attr) and (session_attr["state"] == "waitingForCategory") and is_intent_name("selectCategoryIntent")(handler_input)
+        return ("state" in _session_attr) and (_session_attr["state"] == "waitingForCategory") and is_intent_name("selectCategoryIntent")(handler_input)
 
     def handle(self, handler_input: HandlerInput) -> Response:
         """! \todo Sets the session attributes *state* to "question1", *categories* to the value got from handler_input, 
             builds the Response to announce that the game will start now and asks the first question.
         """
         """! @param handler_input Contains methods to manipulate the session attributes and build the Response."""
-        alexa = handler_input.response_builder
-        session_attr = handler_input.attributes_manager.session_attributes
-        #speech_text = "Which categories do you want to use?"
+        _alexa = handler_input.response_builder
+        _session_attr = handler_input.attributes_manager.session_attributes
+        #_speech_text = "Which categories do you want to use?"
         categories = handler_input.request_envelope.request.intent.slot["category"].values
         hucat = game.listCategoriesByName()
         selected_cats = []
@@ -415,14 +419,14 @@ class SelectCategoryIntentHandler(AbstractRequestHandler):
             else:
                 selected_cats.append(cat)
         if missing_cats != "":
-            speech_text = "Sorry,the categories"+missing_cats+"are not available at the moment"
-            alexa.speak(speech_text)
-        session_attr["category"] = selected_cats
-        session_attr["state"] = "readyToLaunch"
+            _speech_text = "Sorry,the categories"+missing_cats+"are not available at the moment"
+            _alexa.speak(_speech_text)
+        _session_attr["category"] = selected_cats
+        _session_attr["state"] = "readyToLaunch"
         
-        speech_text = "Your selected categories "+str(selected_cats)+"have been added."
-        alexa.speak(speech_text).ask("Please")
-        return alexa.response
+        _speech_text = "Your selected categories "+str(selected_cats)+"have been added."
+        _alexa.speak(_speech_text).ask("Please")
+        return _alexa.response
 
 class TellCategoriesIntentHandler(AbstractRequestHandler):
     """! Handler to tell which categories are avaible to choose"""
@@ -434,23 +438,23 @@ class TellCategoriesIntentHandler(AbstractRequestHandler):
         """! @param handler_input Contains the session attribute and intent name.
             @return Returns an Boolean value
         """
-        session_attr = handler_input.attributes_manager.session_attributes
+        _session_attr = handler_input.attributes_manager.session_attributes
         
-        return ("state" in session_attr) and (session_attr["state"] == "waitingForCategory") and is_intent_name("tellCategories")(handler_input)
+        return ("state" in _session_attr) and (_session_attr["state"] == "waitingForCategory") and is_intent_name("tellCategories")(handler_input)
 
     def handle(self, handler_input: HandlerInput):
         """! \todo TODO"""
         """! @param handler_input Contains the methods to build the Response
             @return Returns an Response obj which includes the generated Response
         """
-        session_attr = handler_input.attributes_manager.session_attributes
-        #speech_text = "Which categories do you want to use?"
+        _session_attr = handler_input.attributes_manager.session_attributes
+        #_speech_text = "Which categories do you want to use?"
         categories = handler_input.request_envelope.request.intent.slot["category"].values
         hucat = game.listCategoriesByName()
-        speech_text = "The following categories are available"
+        _speech_text = "The following categories are available"
         for cat in hucat:
-            speech_text += cat['id'] + cat['name'] + ","
-        handler_input.response_builder.speak(speech_text)
+            _speech_text += cat['id'] + cat['name'] + ","
+        handler_input.response_builder.speak(_speech_text)
         return handler_input.response_builder.response
 
 class HelpIntentHandler(AbstractRequestHandler):
@@ -492,9 +496,9 @@ class CancelOrStopIntentHandler(AbstractRequestHandler):
             @return Returns an Response obj which includes the generated Response
         """
         
-        speech_text = "Goodbye!"
+        _speech_text = "Goodbye!"
 
-        handler_input.response_builder.speak(speech_text)
+        handler_input.response_builder.speak(_speech_text)
         return handler_input.response_builder.response
 
 
@@ -516,11 +520,11 @@ class FallbackIntentHandler(AbstractRequestHandler):
             @return Returns an Response obj which includes the generated Response
         """
         
-        speech_text = (
+        _speech_text = (
             "The Trivial Pursuit skill can't help you with that. "
             "You can say help")
-        reprompt = "If you need help just say so"
-        handler_input.response_builder.speak(speech_text).ask(reprompt)
+        _reprompt = "If you need help just say so"
+        handler_input.response_builder.speak(_speech_text).ask(_reprompt)
         return handler_input.response_builder.response
 
 
@@ -565,8 +569,8 @@ class CatchAllExceptionHandler(AbstractExceptionHandler):
             @return Returns an Response obj which includes the generated Response
         """
         
-        speech = "Sorry, there was some problem. Please try again!!"
-        handler_input.response_builder.speak(speech).ask(speech)
+        _speech_text = "Sorry, there was some problem. Please try again!!"
+        handler_input.response_builder.speak(_speech_text).ask(_speech_text)
 
         return handler_input.response_builder.response
 
@@ -578,25 +582,25 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         @return Returns an azure.functions.HttpResponse obj which includes the http response
     """
     
-    sb = SkillBuilder()
-    sb.skill_id = os.environ["skill_id"]
+    _sb = SkillBuilder()
+    _sb.skill_id = os.environ["SKILL_ID"]
     
-    sb.add_request_handler(LaunchRequestHandler())
-    sb.add_request_handler(YesIntentHandler())
-    sb.add_request_handler(NumberOfPlayersIntentHandler())
-    sb.add_request_handler(AddPlayerIntentHandler()) 
-    sb.add_request_handler(SetDifficultyIntentHandler())
-    sb.add_request_handler(SelectCategoryIntentHandler())
-    sb.add_request_handler(TellCategoriesIntentHandler())
-    sb.add_request_handler(ListCategoriesHandler())
-    sb.add_request_handler(HelpIntentHandler())
-    sb.add_request_handler(CancelOrStopIntentHandler())
-    sb.add_request_handler(FallbackIntentHandler())
-    sb.add_request_handler(SessionEndedRequestHandler())
+    _sb.add_request_handler(LaunchRequestHandler())
+    _sb.add_request_handler(YesIntentHandler())
+    _sb.add_request_handler(NumberOfPlayersIntentHandler())
+    _sb.add_request_handler(AddPlayerIntentHandler()) 
+    _sb.add_request_handler(SetDifficultyIntentHandler())
+    _sb.add_request_handler(SelectCategoryIntentHandler())
+    _sb.add_request_handler(TellCategoriesIntentHandler())
+    _sb.add_request_handler(ListCategoriesHandler())
+    _sb.add_request_handler(HelpIntentHandler())
+    _sb.add_request_handler(CancelOrStopIntentHandler())
+    _sb.add_request_handler(FallbackIntentHandler())
+    _sb.add_request_handler(SessionEndedRequestHandler())
 
-    sb.add_exception_handler(CatchAllExceptionHandler())
+    _sb.add_exception_handler(CatchAllExceptionHandler())
     
-    _webservice_handler = WebserviceSkillHandler(skill=sb.create())
+    _webservice_handler = WebserviceSkillHandler(skill=_sb.create())
     response = _webservice_handler.verify_request_and_dispatch(req.headers, req.get_body().decode("utf-8"))
     
     return func.HttpResponse(json.dumps(response),mimetype="application/json")

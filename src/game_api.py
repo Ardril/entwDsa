@@ -6,12 +6,12 @@
 # @brief API-managing file
 #    
 # @section description_game_api Description
-# Code in this file manages the API calls to get the requested questions
+# Code in this file manages the API call to get the requested questions, contains the game logic and utility functions
 #
 # @section notes_game_api Notes
 # For code in this file, theres only a automaticly created doxygen documentation for now
 #
-# @section libraries_main Libraries/Modules
+# @section libraries_game_api Libraries/Modules
 # - requests
 #   - Needed to send HTTP-requests to the API
 # - json
@@ -29,8 +29,6 @@
 from argparse import ArgumentError
 from copy import deepcopy
 import random
-import time
-from typing import Iterable
 import requests
 import json
 
@@ -243,3 +241,5 @@ class trivia():
         result = json.loads(resp.json)
         questions = result["results"]
 
+if __name__ == "__main__":
+    g = trivia()

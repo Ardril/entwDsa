@@ -4,5 +4,5 @@ local.settings.json
 test
 .venv
 doc
-LICENSE
-.gitignore
+README.md
+tests

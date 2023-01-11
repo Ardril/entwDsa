@@ -5,3 +5,6 @@
 azure-functions
 ask-sdk-core
 ask-sdk-webservice-support
+ask-sdk-model
+requests
+lib

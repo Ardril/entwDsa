@@ -14,10 +14,6 @@ board game *Trivial Pursuit*. The questions asked are taken from an online API.
 2. The documentation of the working hours can be found [here](/doc/Zeiterfassung.xlsx)\
   (`/doc/Zeiterfassung.xlsx`)
 
-## License
-#### GNU General Public License v3.0
-(For more information see [LICENSE](LICENSE))
-
 ## Authors
 - Justin Stahl
 - Niklas Klemens
