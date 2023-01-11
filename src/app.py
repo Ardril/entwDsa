@@ -47,17 +47,24 @@
 from ask_sdk_core.skill_builder import SkillBuilder
 from ask_sdk_core.dispatch_components import AbstractRequestHandler, AbstractExceptionHandler
 from ask_sdk_core.utils import is_request_type, is_intent_name
-from ask_sdk_core.handler_input import HandlerInput
+import ask_sdk_core.handler_input as HandlerInput
 from ask_sdk_model import Response
 from ask_sdk_webservice_support.webservice_handler import WebserviceSkillHandler
 import azure.functions as func
 import json
 import os
+import logging
+import sys
 
 # Local import
 from src import game_api
 
 game = game_api.trivia()
+
+logger = logging.getLogger("azure.mgmt.resource")
+logger.setLevel(logging.DEBUG)
+handler = logging.StreamHandler(stream=sys.stdout)
+logger.addHandler(handler)
 
 class LaunchRequestHandler(AbstractRequestHandler):
     """! Handler for Skill Launch"""
@@ -232,13 +239,14 @@ class SetDifficultyIntentHandler(AbstractRequestHandler):
         """! @param handler_input Contains methods to manipulate the session attributes and build the Response.
             @return Returns an Response obj which includes the generated Response
         """
-        
+
         _session_attr = handler_input.attributes_manager.session_attributes
-        difficulty = handler_input.request_envelope.request.intent.slots["difficulty"].value
-        _session_attr["difficulty"] = difficulty
+        print(handler_input.request_envelope.request.intent.slots["difficulty"].resolutions.resolutions_per_authority[0])
+        _difficulty = handler_input.request_envelope.request.intent.slots["difficulty"].resolutions.resolutions_per_authority[0].values[0].value.name
+        _session_attr["difficulty"] = _difficulty
         _session_attr["state"] = "waitingForCategory"
 
-        _speech_text = f"The difficulty has been set to {difficulty}. Which categories do you want to use?"
+        _speech_text = f"The difficulty has been set to {_difficulty}. Which categories do you want to use?"
         _reprompt = "Which categories do you want to use?"
 
         handler_input.response_builder.speak(_speech_text).ask(_reprompt)
@@ -267,23 +275,33 @@ class SelectCategoryIntentHandler(AbstractRequestHandler):
         _alexa = handler_input.response_builder
         _session_attr = handler_input.attributes_manager.session_attributes
         #_speech_text = "Which categories do you want to use?"
-        categories = handler_input.request_envelope.request.intent.slot["category"].values
-        hucat = game.listCategoriesByName()
-        selected_cats = []
-        missing_cats = ""
-        for cat in categories:
-            if cat not in hucat:
-                missing_cats += cat
+        _categories = handler_input.request_envelope.request.intent.slot["category"].values
+        _hucat = game.listCategoriesByName()
+        _selected_cats = []
+        _missing_cats = ""
+        _questions = []
+        for cat in _categories:
+            if cat not in _hucat:
+                _missing_cats += f"{cat}, "
             else:
-                selected_cats.append(cat)
-        if missing_cats != "":
-            _speech_text = "Sorry,the categories"+missing_cats+"are not available at the moment"
+                _selected_cats.append(cat)
+        if _missing_cats != "":
+            _speech_text = f"Sorry, the categories {_missing_cats} are not available at the moment. Please choose valid categories."
             _alexa.speak(_speech_text)
-        _session_attr["category"] = selected_cats
-        _session_attr["state"] = "readyToLaunch"
+            return _alexa.response
+
+        _session_attr["categorys"] = _selected_cats
         
-        _speech_text = "Your selected categories "+str(selected_cats)+"have been added."
-        _alexa.speak(_speech_text).ask("Please")
+        _questions.append(game.getQuestions(categories=game._categories, difficulty=_session_attr["difficulty"]))
+        _firstPlayer = _session_attr["player"]["0"]["color"]
+
+        _speech_text = f"Okay. The Game starts in 3 .. 2 .. 1 .. Here is your first question {_firstPlayer}: {_questions[0]}"
+        _alexa.speak(_speech_text).ask(_questions[0])
+
+        _questions.pop(0)
+        _session_attr["questions"] = _questions
+        _session_attr["state"] = "question2"
+
         return _alexa.response
 
 class TellCategoriesIntentHandler(AbstractRequestHandler):
@@ -307,11 +325,11 @@ class TellCategoriesIntentHandler(AbstractRequestHandler):
         """
         _session_attr = handler_input.attributes_manager.session_attributes
         #_speech_text = "Which categories do you want to use?"
-        categories = handler_input.request_envelope.request.intent.slot["category"].values
-        hucat = game.listCategoriesByName()
-        _speech_text = "The following categories are available"
-        for cat in hucat:
-            _speech_text += cat['id'] + cat['name'] + ","
+        _categories = handler_input.request_envelope.request.intent.slot["category"].values
+        _hucat = game.listCategoriesByName()
+        _speech_text = "The following categories are available: "
+        for cat in _hucat:
+            _speech_text += f"{cat['name']}, "
         handler_input.response_builder.speak(_speech_text)
         return handler_input.response_builder.response
 
@@ -354,7 +372,7 @@ class CancelOrStopIntentHandler(AbstractRequestHandler):
             @return Returns an Response obj which includes the generated Response
         """
         
-        _speech_text = "Goodbye!"
+        _speech_text = "Thanks for playing our Trivial Pursuit game. See you soon!"
 
         handler_input.response_builder.speak(_speech_text)
         return handler_input.response_builder.response

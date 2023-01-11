@@ -137,7 +137,9 @@ __azurite_db*__.json
 
 # Documentation stuff
 doc/
+doxygen
 doc/doxygen/html/graph_legend.html
 doc/doxygen/html/index.html
 doc/doxygen/html/menudata.js
 doc/doxygen/html/search/searchdata.js
+*.html

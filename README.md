@@ -7,7 +7,7 @@ board game *Trivial Pursuit*. The questions asked are taken from an online API.
 ## Installation
 1. `git clone` the repository
 2. Install Python v3.9.*
-3. Install all dependencys defined in [requirements.txt](requirements.txt) and, if needed run `sudo apt-get install doxygen` to use doxygen
+3. Install all dependencys defined in [requirements.txt](requirements.txt)
 
 ## Documentation
 1. The code documentation is made with *Doxygen* and can be found in the [/doc](/doc) sup-directory by opening `documentation.html` in your browser

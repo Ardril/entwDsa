@@ -152,7 +152,7 @@ class trivia():
             return hrc    
 
     def getQuestions(self,categories,difficulty):
-        """Returns a list of questions that were requeste from the api. The amount of questions is split evenly
+        """Returns a list of questions that were requested from the api. The amount of questions is split evenly
          based on the number of categories and the type (multiple-choice/true-false) is based on a random boolean.
          Before it is returned, the list gets shuffled once"""
         """! @param categories a list of categories selected by the player(s) """
@@ -173,7 +173,6 @@ class trivia():
                 return
 
             for entry in resp['results']:
-
                 question = entry['question']
                 questions.append(question)
         random.shuffle(questions)
