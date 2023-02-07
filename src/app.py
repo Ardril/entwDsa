@@ -315,7 +315,7 @@ class AddPlayerIntentHandler(AbstractRequestHandler):
             _session_attr["state"] = "waitingForDifficulty"
             
             _speech_text = "Okay! Now that we are all present, on which difficulty do you want to play?"
-            _reprompt = "On which difficulty do you want to play?"
+            _reprompt = "On which difficulty do you want to play? You can select either easy,medium or hard."
         else:
             _speech_text = ("Okay! Player "+ str(_i+2) +" which color do you want?")
             _reprompt = ("Player "+ str(_i+2) +" which color do you want?")
