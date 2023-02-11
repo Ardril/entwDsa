@@ -324,7 +324,9 @@ class SelectCategoryIntentHandler(AbstractRequestHandler):
         _questions.append(game.getQuestions(categories=game._categories, difficulty=_session_attr["difficulty"]))
         _firstPlayer = _session_attr["player"]["0"]["color"]
 
-        _speech_text = f"Okay. The Game starts in 3 .. 2 .. 1 .. Here is your first question {_firstPlayer}: {_questions[0]}"
+        _speech_text = "Okay. The Game starts in 3 .. 2 .. 1 ... Please answer each question with A, B, C or D."
+        _alexa.speak(_speech_text)
+        _speech_text = f"Here is your first question {_firstPlayer}: {_questions[0]}"
         _alexa.speak(_speech_text).ask(_questions[0])
 
         _questions.pop(0)
@@ -340,8 +342,8 @@ class QuestionAnswerIntentHandler(AbstractRequestHandler):
             @return Returns an Boolean value
         """
             
-        return is_intent_name("Answer")(handler_input)
-        
+        return is_intent_name("AnswerIntent")(handler_input)
+
     def handle():
         pass
 
