@@ -499,7 +499,6 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     _sb.add_request_handler(SetDifficultyIntentHandler())
     _sb.add_request_handler(SelectCategoryIntentHandler())
     _sb.add_request_handler(TellCategoriesIntentHandler())
-    _sb.add_request_handler(ListCategoriesHandler())
     _sb.add_request_handler(HelpIntentHandler())
     _sb.add_request_handler(CancelOrStopIntentHandler())
     _sb.add_request_handler(FallbackIntentHandler())
