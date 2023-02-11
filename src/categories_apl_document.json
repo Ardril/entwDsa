@@ -1,68 +1,46 @@
 {
-    "type": "APL",
-    "version": "2022.2",
-    "import": [
-        {
-            "name": "alexa-layouts",
-            "version": "1.5.0"
-        }
-    ],
-    "mainTemplate": {
-        "parameters": [
-            "trivia_categories"
-        ],
-        "items": [
-            {
-                "items": [
-                    {
-                        "text": "${trivia_categories[0].sub_cats[0].name}",
-                        "textAlign": "center",
-                        "fontSize": "8vh",
-                        "type": "Text",
-                        "color": "blue"
-                    },
-                    {
-                        "type": "Text",
-                        "text": "${trivia_categories[0].sub_cats[1].name}",
-                        "fontSize": "8vh",
-                        "textAlign": "center",
-                        "color": "yellow"
-                    },
-                    {
-                        "type": "Text",
-                        "text": "${trivia_categories[0].sub_cats[2].name}",
-                        "fontSize": "8vh",
-                        "textAlign": "center",
-                        "color": "orange"
-                    },
-                    {
-                        "type": "Text",
-                        "text": "${trivia_categories[0].sub_cats[3].name}",
-                        "fontSize": "8vh",
-                        "textAlign": "center",
-                        "color": "red"
-                    },
-                    {
-                        "type": "Text",
-                        "text": "${trivia_categories[0].sub_cats[4].name}",
-                        "fontSize": "8vh",
-                        "textAlign": "center",
-                        "color": "purple"
-                    },
-                    {
-                        "type": "Text",
-                        "text": "${trivia_categories[0].sub_cats[5].name}",
-                        "fontSize": "8vh",
-                        "textAlign": "center",
-                        "color": "green"
-                    }
-                ],
-                "wrap": "wrap",
-                "direction": "row",
-                "type": "Container",
-                "width": "auto",
-                "height": "auto"
-            }
-        ]
+  "type": "APL",
+  "version": "2023.1",
+  "settings": {},
+  "theme": "dark",
+  "import": [
+    {
+      "name": "alexa-layouts",
+      "version": "1.5.0"
     }
+  ],
+  "resources": [],
+  "styles": {},
+  "onMount": [],
+  "graphics": {},
+  "commands": {},
+  "layouts": {},
+  "mainTemplate": {
+    "parameters": [
+      "payload"
+    ],
+    "items": [
+      {
+        "type": "Container",
+        "width": "100vw",
+        "height": "100vh",
+        "items": [
+          {
+            "when": "${@viewportOrientation == @viewportOrientationLandscape}",
+            "type": "Image",
+            "height": "100%",
+            "width": "100%",
+            "source": "blob:https://apl.ninja/a11ce5f1-89d1-4a4f-93ad-949ef69c419e"
+          },
+          {
+            "when": "${@viewportOrientation == @viewportOrientationPortrait}",
+            "type": "Image",
+            "height": "100%",
+            "width": "100%",
+            "source": "blob:https://apl.ninja/842ab54c-f458-43c3-8389-6fa04d8ac2d1"
+          }
+        ]
+      }
+    ]
+  }
 }

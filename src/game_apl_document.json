@@ -1,117 +1,115 @@
 {
-    "document": {
-        "type": "APL",
-        "version": "2022.1",
-        "license": "Copyright 2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.\nSPDX-License-Identifier: LicenseRef-.amazon.com.-AmznSL-1.0\nLicensed under the Amazon Software License  http://aws.amazon.com/asl/",
-        "settings": {},
-        "theme": "dark",
-        "import": [
+    "type": "APL",
+    "version": "2022.1",
+    "license": "Copyright 2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.\nSPDX-License-Identifier: LicenseRef-.amazon.com.-AmznSL-1.0\nLicensed under the Amazon Software License  http://aws.amazon.com/asl/",
+    "settings": {},
+    "theme": "dark",
+    "import": [
+      {
+        "name": "alexa-viewport-profiles",
+        "version": "1.5.0"
+      },
+      {
+        "name": "alexa-layouts",
+        "version": "1.4.0"
+      }
+    ],
+    "resources": [],
+    "styles": {},
+    "onMount": [],
+    "graphics": {},
+    "commands": {},
+    "layouts": {},
+    "mainTemplate": {
+      "parameters": [
+        "results"
+      ],
+      "items": [
+        {
+          "type": "Container",
+          "items": [
             {
-                "name": "alexa-layouts",
-                "version": "1.5.0"
+              "type": "AlexaBackground",
+              "backgroundColor": "#F5DEB3"
+            },
+            {
+              "when": "${@viewportShape != @viewportShapeRound}",
+              "source": "https://dsatrivialpursuit.blob.core.windows.net/png/player_card_grey.png",
+              "type": "Image",
+              "width": "40vw",
+              "height": "40vh",
+              "alignSelf": "center"
+            },
+            {
+              "when": "${@viewportShape == @viewportShapeRound}",
+              "source": "https://dsatrivialpursuit.blob.core.windows.net/png/player_card_green.png",
+              "type": "Image",
+              "alignSelf": "center",
+              "height": "100vh",
+              "width": "100vw"
+            },
+            {
+              "when": "${@viewportShape != @viewportShapeRound}",
+              "textAlign": "center",
+              "textAlignVertical": "center",
+              "text": "${results[1].question}",
+              "fontSize": "${viewport.height > 400 ? 50 : 10}",
+              "color": "black",
+              "type": "Text",
+              "height": "30vh",
+              "alignSelf": "center"
+            },
+            {
+              "when": "${@viewportOrientation == @viewportOrientationLandscape}",
+              "text": "A ${results[1].correct_answer}",
+              "fontSize": "${viewport.height > 400 ? 35 : 10}",
+              "color": "grey",
+              "textAlign": "center",
+              "type": "Text",
+              "position": "absolute",
+              "maxWidth": "${viewport.width/4}",
+              "bottom": "60",
+              "paddingLeft": "25"
+            },
+            {
+              "when": "${@viewportOrientation == @viewportOrientationLandscape}",
+              "text": "B ${results[1].incorrect_answers[0]}",
+              "fontSize": "${viewport.height > 400 ? 35 : 10}",
+              "color": "grey",
+              "textAlign": "center",
+              "type": "Text",
+              "bottom": "60",
+              "position": "absolute",
+              "maxWidth": "${viewport.width/4}",
+              "left": "${viewport.width/5}"
+            },
+            {
+              "when": "${@viewportOrientation == @viewportOrientationLandscape}",
+              "text": "C ${results[1].incorrect_answers[1]}",
+              "fontSize": "${viewport.height > 400 ? 35 : 10}",
+              "color": "grey",
+              "textAlign": "center",
+              "type": "Text",
+              "position": "absolute",
+              "maxWidth": "${viewport.width/4}",
+              "right": "${viewport.width/4}",
+              "bottom": "60"
+            },
+            {
+              "when": "${@viewportOrientation == @viewportOrientationLandscape}",
+              "text": "D ${results[1].incorrect_answers[2]}",
+              "fontSize": "${viewport.height > 400 ? 35 : 10}",
+              "color": "grey",
+              "type": "Text",
+              "textAlign": "center",
+              "maxWidth": "${viewport.width/4}",
+              "position": "absolute",
+              "right": "20",
+              "bottom": "60",
+              "paddingRight": "25"
             }
-        ],
-        "resources": [],
-        "styles": {},
-        "onMount": [],
-        "graphics": {},
-        "commands": {},
-        "layouts": {},
-        "mainTemplate": {
-            "parameters": [
-                "payload"
-            ],
-            "items": [
-                {
-                    "type": "Container",
-                    "items": [
-                        {
-                            "type": "AlexaBackground",
-                            "backgroundColor": "lightblue"
-                        },
-                        {
-                            "fontStyle": "normal",
-                            "text": "Player X",
-                            "fontWeight": "normal",
-                            "fontSize": "7vh",
-                            "type": "Text",
-                            "id": "PlayerName",
-                            "width": "25vw",
-                            "height": "10vh",
-                            "padding": 5,
-                            "alignSelf": "start",
-                            "position": "absolute"
-                        },
-                        {
-                            "textAlign": "center",
-                            "layoutDirection": "inherit",
-                            "text": "Current Question:",
-                            "fontSize": "7vh",
-                            "id": "question",
-                            "type": "Text",
-                            "width": "60vw",
-                            "alignSelf": "end",
-                            "position": "relative",
-                            "right": "15"
-                        },
-                        {
-                            "source": "https://dsatrivialpursuit.blob.core.windows.net/png/player_card_darkblue.png",
-                            "type": "Image",
-                            "id": "PlayerPic",
-                            "width": "25vw",
-                            "height": "25vh",
-                            "position": "relative",
-                            "spacing": "10vh"
-                        },
-                        {
-                            "textAlign": "center",
-                            "textAlignVertical": "center",
-                            "layoutDirection": "inherit",
-                            "text": "Das hier ist eine tolle Frage die du jetzt beantworten musst:",
-                            "fontSize": "10vh",
-                            "type": "Text",
-                            "width": "60vw",
-                            "height": "30vh",
-                            "padding": 10,
-                            "paddingTop": "15vh",
-                            "alignSelf": "center",
-                            "position": "absolute",
-                            "top": "100",
-                            "right": "10"
-                        },
-                        {
-                            "text": "Current Points:",
-                            "fontSize": "7vh",
-                            "type": "Text",
-                            "padding": 5,
-                            "spacing": "10vh"
-                        },
-                        {
-                            "text": "X: y",
-                            "fontSize": "5vh",
-                            "textAlignVertical": "auto",
-                            "textAlign": "auto",
-                            "type": "Text",
-                            "paddingStart": "20"
-                        },
-                        {
-                            "text": "X: y",
-                            "fontSize": "5vh",
-                            "type": "Text",
-                            "paddingStart": "20"
-                        },
-                        {
-                            "text": "X: y",
-                            "fontSize": "5vh",
-                            "type": "Text",
-                            "padding": 5,
-                            "paddingStart": "20"
-                        }
-                    ]
-                }
-            ]
+          ]
         }
-    },
-    "datasources": {},
-    "sources": {}
-}
+      ]
+    }
+  }
