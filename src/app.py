@@ -323,8 +323,9 @@ class SelectCategoryIntentHandler(AbstractRequestHandler):
         """! @param handler_input Contains methods to manipulate the session attributes and build the Response."""
         _alexa = handler_input.response_builder
         _session_attr = handler_input.attributes_manager.session_attributes
-        #_speech_text = "Which categories do you want to use?"
-        _categories = handler_input.request_envelope.request.intent.slot["category"].values
+        _speech_text = "piep piep bada bin bada bung"
+        _alexa.speak(_speech_text)
+        _categories = handler_input.request_envelope.request.intent.slot["categoryname"].values
         _hucat = game.listCategoriesByName()
         _selected_cats = []
         _missing_cats = ""
