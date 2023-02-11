@@ -333,34 +333,17 @@ class SelectCategoryIntentHandler(AbstractRequestHandler):
 
         return _alexa.response
 
-class TellCategoriesIntentHandler(AbstractRequestHandler):
-    """! Handler to tell which categories are avaible to choose"""
-    """! @param AbstractRequestHandler Extension of the class *AbstractRequestHandler*"""
-    def can_handle(self, handler_input: HandlerInput):
-        """! Returns true if the Request inside the Handler Input has the session attribute *state* set to *waitingForCategory* 
-            and the intent name is *tellCategories*. 
-        """
-        """! @param handler_input Contains the session attribute and intent name.
+class QuestionAnswerIntentHandler(AbstractRequestHandler):
+    def can_handle(self, handler_input: HandlerInput) -> bool:
+        """! Returns true if the Request inside the Handler Input has the intent name *Answer*."""
+        """! @param handler_input Contains the intent name.
             @return Returns an Boolean value
         """
-        _session_attr = handler_input.attributes_manager.session_attributes
+            
+        return is_intent_name("Answer")(handler_input)
         
-        return ("state" in _session_attr) and (_session_attr["state"] == "waitingForCategory") and is_intent_name("tellCategories")(handler_input)
-
-    def handle(self, handler_input: HandlerInput):
-        """! \todo TODO"""
-        """! @param handler_input Contains the methods to build the Response
-            @return Returns an Response obj which includes the generated Response
-        """
-        _session_attr = handler_input.attributes_manager.session_attributes
-        #_speech_text = "Which categories do you want to use?"
-        _categories = handler_input.request_envelope.request.intent.slot["category"].values
-        _hucat = game.listCategoriesByName()
-        _speech_text = "The following categories are available: "
-        for cat in _hucat:
-            _speech_text += f"{cat['name']}, "
-        handler_input.response_builder.speak(_speech_text)
-        return handler_input.response_builder.response
+    def handle():
+        pass
 
 class HelpIntentHandler(AbstractRequestHandler):
     """! Handler for Help Intent"""
@@ -498,7 +481,6 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     _sb.add_request_handler(AddPlayerIntentHandler()) 
     _sb.add_request_handler(SetDifficultyIntentHandler())
     _sb.add_request_handler(SelectCategoryIntentHandler())
-    _sb.add_request_handler(TellCategoriesIntentHandler())
     _sb.add_request_handler(HelpIntentHandler())
     _sb.add_request_handler(CancelOrStopIntentHandler())
     _sb.add_request_handler(FallbackIntentHandler())
