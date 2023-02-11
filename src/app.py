@@ -222,11 +222,12 @@ class LaunchRequestHandler(AbstractRequestHandler):
         """
         
         _session_attr = handler_input.attributes_manager.session_attributes
-        _session_attr["state"] = "introduced"
+        
         
         _speech_text = "Welcome to our Trivial Pursuit Game. Would you like to start a game?"
         _reprompt = "If you need help, just say so"
 
+        _session_attr["state"] = "introduced"
         handler_input.response_builder.speak(_speech_text).ask(_reprompt)
         return handler_input.response_builder.response
 
@@ -251,12 +252,13 @@ class YesIntentHandler(AbstractRequestHandler):
         
         _session_attr = handler_input.attributes_manager.session_attributes
         if ("state" in _session_attr) and (_session_attr["state"] == "introduced"):
-            _session_attr["state"] = "waitingForPlayerCount"
+
             _session_attr["playerCount"] = 0
             
             _speech_text = "Thats cool! How many players are you?"
             _reprompt = "How many players are you?"
             
+            _session_attr["state"] = "waitingForPlayerCount"
             handler_input.response_builder.speak(_speech_text).ask(_reprompt)
             return handler_input.response_builder.response
 
@@ -285,7 +287,6 @@ class NumberOfPlayersIntentHandler(AbstractRequestHandler):
         """
         
         _session_attr = handler_input.attributes_manager.session_attributes
-        _session_attr["state"] = "waitingForPlayerColor"
         playerCount = int(handler_input.request_envelope.request.intent.slots["count"].value)
         _session_attr["playerCount"] = playerCount
         
@@ -295,6 +296,7 @@ class NumberOfPlayersIntentHandler(AbstractRequestHandler):
             _speech_text = "Okay. Which color do you want?"
         _reprompt = "Which color do you want?"
         
+        _session_attr["state"] = "waitingForPlayerColor"
         handler_input.response_builder.speak(_speech_text).ask(_reprompt)
         return handler_input.response_builder.response
 
@@ -381,11 +383,12 @@ class SetDifficultyIntentHandler(AbstractRequestHandler):
         print(handler_input.request_envelope.request.intent.slots["difficulty"].resolutions.resolutions_per_authority[0])
         _difficulty = handler_input.request_envelope.request.intent.slots["difficulty"].resolutions.resolutions_per_authority[0].values[0].value.name
         _session_attr["difficulty"] = _difficulty
-        _session_attr["state"] = "waitingForCategory"
+        
 
         _speech_text = f"The difficulty has been set to {_difficulty}. Which categories do you want to use?"
         _reprompt = "Which categories do you want to use?"
 
+        _session_attr["state"] = "waitingForCategory"
         handler_input.response_builder.speak(_speech_text).ask(_reprompt)
         return handler_input.response_builder.response
 
@@ -551,6 +554,8 @@ class CancelOrStopIntentHandler(AbstractRequestHandler):
         """
         
         _speech_text = "Thanks for playing our Trivial Pursuit game. See you soon!"
+        _session_attr = handler_input.attributes_manager.session_attributes
+        _session_attr["state"] = "None"
 
         handler_input.response_builder.speak(_speech_text)
         return handler_input.response_builder.response
