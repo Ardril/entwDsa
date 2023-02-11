@@ -304,7 +304,7 @@ class SelectCategoryIntentHandler(AbstractRequestHandler):
         _session_attr = handler_input.attributes_manager.session_attributes
         _speech_text = "piep piep bada bin bada bung"
         _alexa.speak(_speech_text)
-        _categories = handler_input.request_envelope.request.intent.slot["categoryname"].values
+        _categories = handler_input.request_envelope.request.intent.slot["categoryname"].value
         _hucat = game.listCategoriesByName()
         _selected_cats = []
         _missing_cats = ""
