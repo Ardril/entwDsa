@@ -254,25 +254,13 @@ class SetDifficultyIntentHandler(AbstractRequestHandler):
         _session_attr["difficulty"] = _difficulty
         
 
-        _speech_text = f"The difficulty has been set to {_difficulty}. Which categories do you want to use?"
-        _reprompt = "Which categories do you want to use?"
+        _speech_text = f"The difficulty has been set to {_difficulty}. Which categories do you want to use? You can choose between Geography, History, Sports and Hobbies, Art, Entertainment and Science."
+        _reprompt = "Which categories do you want to use? You can pick between Geography, History, Sports and Hobbies, Art, Entertainment and Science."
 
         _session_attr["state"] = "waitingForCategory"
         handler_input.response_builder.speak(_speech_text).ask(_reprompt)
+        self.launch_screen(handler_input)
         return handler_input.response_builder.response
-
-class ListCategoriesHandler(AbstractRequestHandler):
-
-    def can_handle(self, handler_input: HandlerInput) -> bool:
-        """! Returns true if the Request inside the Handler Input has the session attribute *state* set to *waitingForCategory* 
-            and the intent name is *SelectCategoryIntent*. 
-        """
-        """! @param handler_input Contains the session attribute and intent name.
-            @return Returns an Boolean value
-        """
-        
-        session_attr = handler_input.attributes_manager.session_attributes
-        return ("state" in session_attr) and (session_attr["state"] == "waitingForCategory") and is_intent_name("listCategoriesIntent")(handler_input)
 
     def supports_apl(self, handler_input):
         supported_ifaces = get_supported_interfaces(handler_input)
@@ -291,15 +279,6 @@ class ListCategoriesHandler(AbstractRequestHandler):
                 )
             )
 
-    def handle(self, handler_input: HandlerInput) -> Response:
-
-        alexa = handler_input.response_builder
-        session_attr = handler_input.attributes_manager.session_attributes
-        self.launch_screen(handler_input)
-        
-
-
-        return handler_input.response_builder.response
 
 class SelectCategoryIntentHandler(AbstractRequestHandler):
     """! Handler for setting the categorys and starting the game"""
