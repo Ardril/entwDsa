@@ -93,7 +93,7 @@ class LaunchRequestHandler(AbstractRequestHandler):
         _session_attr = handler_input.attributes_manager.session_attributes
         
         
-        _speech_text = "Welcome to our Trivial Pursuit Game. Would you like to start a game?"
+        _speech_text = "Welcome to our Trivia Gameshow. Would you like to start a game?"
         _reprompt = "If you need help, just say so"
 
         _session_attr["state"] = "introduced"
@@ -215,7 +215,7 @@ class AddPlayerIntentHandler(AbstractRequestHandler):
         if _i == (_session_attr["playerCount"] - 1):             # If all players are added now
             _session_attr["state"] = "waitingForDifficulty"
             
-            _speech_text = "Okay! Now that we are all present, on which difficulty do you want to play?"
+            _speech_text = "Okay! Now that we are ready, on which difficulty do you want to play? You can choose between easy, medium and hard."
             _reprompt = "On which difficulty do you want to play? You can select either easy,medium or hard."
         else:
             _speech_text = ("Okay! Player "+ str(_i+2) +" which color do you want?")
@@ -290,7 +290,6 @@ class SelectCategoryIntentHandler(AbstractRequestHandler):
         """! @param handler_input Contains the session attribute and intent name.
             @return Returns an Boolean value
         """
-        
         _session_attr = handler_input.attributes_manager.session_attributes
         
         return ("state" in _session_attr) and (_session_attr["state"] == "waitingForCategory") and is_intent_name("selectCategoryIntent")(handler_input)
@@ -302,24 +301,14 @@ class SelectCategoryIntentHandler(AbstractRequestHandler):
         """! @param handler_input Contains methods to manipulate the session attributes and build the Response."""
         _alexa = handler_input.response_builder
         _session_attr = handler_input.attributes_manager.session_attributes
-        _speech_text = "piep piep bada bin bada bung"
+        _speech_text = "piep piep bada bin bada bumm"
         _alexa.speak(_speech_text)
-        _categories = handler_input.request_envelope.request.intent.slot["categoryname"].value
-        _hucat = game.listCategoriesByName()
+        _categories = handler_input.request_envelope.request.intent.slots.size.resolutions.resolutionsPerAuthority[0].values[0].value.name
         _selected_cats = []
-        _missing_cats = ""
         _questions = []
-        for cat in _categories:
-            if cat not in _hucat:
-                _missing_cats += f"{cat}, "
-            else:
-                _selected_cats.append(cat)
-        if _missing_cats != "":
-            _speech_text = f"Sorry, the categories {_missing_cats} are not available at the moment. Please choose valid categories."
-            _alexa.speak(_speech_text)
-            return _alexa.response
+        _selected_cats.append(_categories)
 
-        _session_attr["categorys"] = _selected_cats
+        _session_attr["categories"] = _selected_cats
         
         _questions.append(game.getQuestions(categories=game._categories, difficulty=_session_attr["difficulty"]))
         _firstPlayer = _session_attr["player"]["0"]["color"]
