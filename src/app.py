@@ -309,7 +309,7 @@ class SelectCategoryIntentHandler(AbstractRequestHandler):
         _selected_cats.append(_categories)
 
         _session_attr["categories"] = _selected_cats
-        
+
         _questions.append(game.getQuestions(categories=game._categories, difficulty=_session_attr["difficulty"]))
         _firstPlayer = _session_attr["player"]["0"]["color"]
 

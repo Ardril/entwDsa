@@ -158,8 +158,9 @@ class trivia():
         """! @param categories a list of categories selected by the player(s) """
         """! @param difficulty """ 
     	
-
-        questions = []
+        counter = 0
+        questions = {}
+        i_a = []
         amm = int(50/len(categories))
         if(difficulty not in ["1","2","3"]) and (difficulty not in ["easy","medium","hard"]) :
             raise ArgumentError().message("difficulty must either be one of ['1','2','3'] or ['easy','medium','hard']")
@@ -173,9 +174,20 @@ class trivia():
                 return
 
             for entry in resp['results']:
-                question = entry['question']
-                questions.append(question)
-        random.shuffle(questions)
+                q = entry['question']
+                if "&quot;" in q:
+                    q = q.replace("&quot;", "'")
+                c_a = entry['correct_answer']
+                if "&quot;" in c_a:
+                    c_a = c_a.replace("&quot;", "'")
+                for answ in entry['incorrect_answers']:
+                    if "&quot;" in answ:
+                        answ = answ.replace("&quot;", "'")
+                    i_a.append(answ)
+            qdict = dict(question = q, correct_answer = c_a, incorrect_answers = i_a)
+            name = "question" +str(counter)
+            questions[name]= qdict
+            counter += 1
 
         return questions
 
