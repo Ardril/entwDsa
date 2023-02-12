@@ -188,16 +188,29 @@ class trivia():
             name = "question" +str(counter)
             questions[name]= qdict
             counter += 1
-
+        
+        out_file = open("questions.json", "w")
+        json.dump(questions, out_file, indent = 6)
+        out_file.close()
         return questions
 
-        quest = []
-        if resp["response_code"] != 0:
-            return
-        for question in resp['results']:
-            print("ENG:  "+question['question'])
-            quest.append(question['question'])
-            #print("GER:  "+self.translation.translate(str(question['question'])))
+    def checkcorrect():
+
+        pass
+
+
+
+
+
+
+
+        # quest = []
+        # if resp["response_code"] != 0:
+        #     return
+        # for question in resp['results']:
+        #     print("ENG:  "+question['question'])
+        #     quest.append(question['question'])
+        #     #print("GER:  "+self.translation.translate(str(question['question'])))'
 
           
 
