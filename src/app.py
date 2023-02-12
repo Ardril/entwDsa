@@ -292,7 +292,7 @@ class SelectCategoryIntentHandler(AbstractRequestHandler):
         """
         _session_attr = handler_input.attributes_manager.session_attributes
         
-        return ("state" in _session_attr) and (_session_attr["state"] == "waitingForCategory") and is_intent_name("selectCategoryIntent")(handler_input)
+        return ("state" in _session_attr) and is_intent_name("SelectCategoryIntent")(handler_input)
 
     def handle(self, handler_input: HandlerInput) -> Response:
         """! \todo Sets the session attributes *state* to "question1", *categories* to the value got from handler_input, 
