@@ -299,6 +299,7 @@ class SelectCategoryIntentHandler(AbstractRequestHandler):
             builds the Response to announce that the game will start now and asks the first question.
         """
         """! @param handler_input Contains methods to manipulate the session attributes and build the Response."""
+        logger.debug("ALAAAAAAAARm")
         _alexa = handler_input.response_builder
         #_session_attr = handler_input.attributes_manager.session_attributes
         _speech_text = "piep piep bada bin bada bumm"
