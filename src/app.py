@@ -309,11 +309,11 @@ class SelectCategoryIntentHandler(AbstractRequestHandler):
 
         _session_attr["categories"] = _selected_cats
 
-        game.getQuestions(categories=game._categories, difficulty=_session_attr["difficulty"])
+        game.getQuestions(categories=_selected_cats, difficulty=_session_attr["difficulty"])
         _firstPlayer = _session_attr["player"]["0"]["color"]
 
         game.selectQuestion()
-        out_file = open("aplquestion.json", "w")
+        out_file = open("aplquestion.json", "r")
         _question = out_file.json()
         out_file.close()
 
