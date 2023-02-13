@@ -198,9 +198,10 @@ class trivia():
 
     def selectQuestion(self):
         i_a = []
-        out_file = open("checkanswer.json", "w")
-        questions =out_file.json()
-        out_file.close()
+        questions = {}
+        with open("checkanswer.json", "w") as out_file:
+            questions = out_file.json()
+        
         length = len(questions) - 1
         for entry in questions["question"+str(length)]:
             q = entry['question']
@@ -209,9 +210,8 @@ class trivia():
                 i_a.append(answ)
         
         apldict = dict(question = q, answ = [c_a, i_a[0], i_a[1], i_a[2]])
-        out_file = open("aplquestion.json", "w")
-        json.dump(apldict, out_file, indent = 6)
-        out_file.close()
+        with open("aplquestion.json", "w") as out_file:
+            json.dump(apldict, out_file, indent = 6)
         questions.popitem()
         return apldict
 
