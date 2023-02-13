@@ -196,16 +196,6 @@ class trivia():
         return questions
 
 
-#{ "question": "bla bla?",
-#  "answers":
-#       [
-#        "Come Fly With Me",
-#        "Ain&#039;t That a Kick in the Head",
-#        "Ring-a-Ding Ding",
-#        "pep"
-#      ]
-#   }
-
     def selectQuestion(self):
         i_a = []
         out_file = open("checkanswer.json", "w")
@@ -256,12 +246,6 @@ class trivia():
 
 
     def buidlUrl(self,amount: int,typ: str,category: int,difficulty: str or int):
-        if difficulty > 3 or difficulty < 1:
-            raise ArgumentError(message="Difficulty must be a number between 1-3")
-        if amount <= 0:
-            raise ArgumentError(message="amount must not be lower than 0 or bigger than 50")
-        if category > 32 or category < 9:
-            raise ArgumentError(message="category must be a number between 9 and 32")
         comp = []
 
         # Amount 
@@ -277,7 +261,38 @@ class trivia():
             raise ArgumentError.message("typ must be either mc or tf")
 
         # Categories
-        comp.append("category="+str(category))
+        #comp.append("category="+str(category))
+        if category == "Science":
+            comp.append("category=17")
+            comp.append("category=18")
+            comp.append("category=19")
+            comp.append("category=30")
+
+            
+        if category == "Art":
+            comp.append("category=25")
+
+        if category == "Sport and Hobbies":
+            comp.append("category=28")
+            comp.append("category=21")
+
+        if category == "Entertainment":
+            comp.append("category=10")
+            comp.append("category=11")
+            comp.append("category=12")
+            comp.append("category=13")
+            comp.append("category=14")
+            comp.append("category=15")
+            comp.append("category=16")
+            comp.append("category=29")
+            comp.append("category=31")
+            comp.append("category=32")
+
+        if category == "History":
+            comp.append("category=23")
+
+        if category == "Geography":
+            comp.append("category=22")
         
         # Difficulty
         if "str" in str(type(difficulty)):

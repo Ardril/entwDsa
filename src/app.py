@@ -300,10 +300,11 @@ class SelectCategoryIntentHandler(AbstractRequestHandler):
         """
         """! @param handler_input Contains methods to manipulate the session attributes and build the Response."""
         _alexa = handler_input.response_builder
+        _speech_text = "pep"
+        _alexa.speak(_speech_text)
         _session_attr = handler_input.attributes_manager.session_attributes
         _categories = handler_input.request_envelope.request.intent.slots.size.resolutions.resolutionsPerAuthority[0].values[0].value.name
         _selected_cats = []
-        _questions = []
         _selected_cats.append(_categories)
 
         _session_attr["categories"] = _selected_cats
