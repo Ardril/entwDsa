@@ -189,14 +189,54 @@ class trivia():
             questions[name]= qdict
             counter += 1
         
-        out_file = open("questions.json", "w")
+        out_file = open("checkanswer.json", "w")
         json.dump(questions, out_file, indent = 6)
         out_file.close()
+
         return questions
 
-    def checkcorrect():
 
-        pass
+#{ "question": "bla bla?",
+#  "answers":
+#       [
+#        "Come Fly With Me",
+#        "Ain&#039;t That a Kick in the Head",
+#        "Ring-a-Ding Ding",
+#        "pep"
+#      ]
+#   }
+
+    def selectQuestion(self):
+        i_a = []
+        out_file = open("checkanswer.json", "w")
+        questions =out_file.json()
+        out_file.close()
+        length = len(questions) - 1
+        for entry in questions["question"+str(length)]:
+            q = entry['question']
+            c_a = entry['correct_answer']
+            for answ in entry['incorrect_answers']:
+                i_a.append(answ)
+        
+        apldict = dict(question = q, answ = [c_a, i_a[0], i_a[1], i_a[2]])
+        out_file = open("aplquestion.json", "w")
+        json.dump(apldict, out_file, indent = 6)
+        out_file.close()
+        questions.popitem()
+        return apldict
+
+
+
+
+    def checkcorrect(self, selected, q):
+        check_file = open("questions.json", "w")
+        check = check_file.json()
+        if selected == check.q["correct_answer"]:
+            check_file.close()
+            return True
+        else:
+            check_file.close()
+            return False
 
 
 

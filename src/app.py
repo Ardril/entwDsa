@@ -299,29 +299,32 @@ class SelectCategoryIntentHandler(AbstractRequestHandler):
             builds the Response to announce that the game will start now and asks the first question.
         """
         """! @param handler_input Contains methods to manipulate the session attributes and build the Response."""
-        logger.debug("ALAAAAAAAARm")
         _alexa = handler_input.response_builder
-        #_session_attr = handler_input.attributes_manager.session_attributes
-        _speech_text = "piep piep bada bin bada bumm"
+        _session_attr = handler_input.attributes_manager.session_attributes
+        _categories = handler_input.request_envelope.request.intent.slots.size.resolutions.resolutionsPerAuthority[0].values[0].value.name
+        _selected_cats = []
+        _questions = []
+        _selected_cats.append(_categories)
+
+        _session_attr["categories"] = _selected_cats
+
+        game.getQuestions(categories=game._categories, difficulty=_session_attr["difficulty"])
+        _firstPlayer = _session_attr["player"]["0"]["color"]
+
+        game.selectQuestion()
+        out_file = open("aplquestion.json", "w")
+        _question = out_file.json()
+        out_file.close()
+
+
+        _speech_text = "Okay. The Game starts in 3 .. 2 .. 1 ... Please answer each question with A, B, C or D."
         _alexa.speak(_speech_text)
-        #_categories = handler_input.request_envelope.request.intent.slots.size.resolutions.resolutionsPerAuthority[0].values[0].value.name
-        #_selected_cats = []
-        #_questions = []
-        #_selected_cats.append(_categories)
-
-        #_session_attr["categories"] = _selected_cats
-
-        #_questions.append(game.getQuestions(categories=game._categories, difficulty=_session_attr["difficulty"]))
-        #_firstPlayer = _session_attr["player"]["0"]["color"]
-
-        #_speech_text = "Okay. The Game starts in 3 .. 2 .. 1 ... Please answer each question with A, B, C or D."
-        #_alexa.speak(_speech_text)
-        #_speech_text = f"Here is your first question {_firstPlayer}: {_questions[0]}"
-        #_alexa.speak(_speech_text).ask(_questions[0])
-
-        #_questions.pop(0)
-        #_session_attr["questions"] = _questions
-        #_session_attr["state"] = "question2"
+        _speech_text = f"Here is your first question {_firstPlayer}: {_question['question']}"
+        _alexa.speak(_speech_text)
+        _speech_text = f"The possible answers are {_question['answ'][0]}"
+        _alexa.speak(_speech_text)
+        _session_attr["questions"] = _question
+        _session_attr["state"] = "question2"
 
         return _alexa.response
 
