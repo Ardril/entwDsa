@@ -302,7 +302,7 @@ class SelectCategoryIntentHandler(AbstractRequestHandler):
         _alexa = handler_input.response_builder
 
         _session_attr = handler_input.attributes_manager.session_attributes
-        _categories = handler_input.request_envelope.request.intent.slots.categoryname.resolutions.resolution_per_authority[0].values[0].value.name
+        _categories = handler_input.request_envelope.request.intent.slots["categoryname"].resolutions.resolutions_per_authority[0].values[0].value.name
         _speech_text = "pep"
         _alexa.speak(_speech_text)
         return _alexa.response
