@@ -325,4 +325,4 @@ class trivia():
 
 if __name__ == "__main__":
     g = trivia()
-    g.buildUrl(5,"mc","Science",2)
+    #g.buildUrl(5,"mc","Science",2)
