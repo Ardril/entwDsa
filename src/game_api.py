@@ -245,7 +245,7 @@ class trivia():
           
 
 
-    def buidlUrl(self,amount: int,typ: str,category: int,difficulty: str or int):
+    def buildUrl(self,amount: int,typ: str,category: str,difficulty: str or int):
         comp = []
 
         # Amount 
@@ -262,38 +262,40 @@ class trivia():
 
         # Categories
         #comp.append("category="+str(category))
+        categorylist = []
         if category == "Science":
-            comp.append("category=17")
-            comp.append("category=18")
-            comp.append("category=19")
-            comp.append("category=30")
+            categorylist.append("category=17")
+            categorylist.append("category=18")
+            categorylist.append("category=19")
+            categorylist.append("category=30")
 
             
         if category == "Art":
-            comp.append("category=25")
+            categorylist.append("category=25")
 
         if category == "Sport and Hobbies":
-            comp.append("category=28")
-            comp.append("category=21")
+            categorylist.append("category=28")
+            categorylist.append("category=21")
 
         if category == "Entertainment":
-            comp.append("category=10")
-            comp.append("category=11")
-            comp.append("category=12")
-            comp.append("category=13")
-            comp.append("category=14")
-            comp.append("category=15")
-            comp.append("category=16")
-            comp.append("category=29")
-            comp.append("category=31")
-            comp.append("category=32")
+            categorylist.append("category=10")
+            categorylist.append("category=11")
+            categorylist.append("category=12")
+            categorylist.append("category=13")
+            categorylist.append("category=14")
+            categorylist.append("category=15")
+            categorylist.append("category=16")
+            categorylist.append("category=29")
+            categorylist.append("category=31")
+            categorylist.append("category=32")
 
         if category == "History":
-            comp.append("category=23")
+            categorylist.append("category=23")
 
         if category == "Geography":
-            comp.append("category=22")
-        
+            categorylist.append("category=22")
+
+        comp.append(categorylist[random.randint(0,len(categorylist))])
         # Difficulty
         if "str" in str(type(difficulty)):
             difficulty = "difficulty="+difficulty
@@ -310,6 +312,7 @@ class trivia():
         url = "https://opentdb.com/api.php?"+( "&".join(comp))
         tokenstring = "&token="+str(self._TOKEN)
         url = url + tokenstring
+        print(url)
         return url
 
     #difficulty = "" # easy,medium,hard or mixed or 1,2,3
@@ -322,3 +325,4 @@ class trivia():
 
 if __name__ == "__main__":
     g = trivia()
+    g.buildUrl(5,"mc","Science",2)
