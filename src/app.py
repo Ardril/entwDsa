@@ -196,7 +196,7 @@ class AddPlayerIntentHandler(AbstractRequestHandler):
         """
         
         _session_attr = handler_input.attributes_manager.session_attributes
-        playerColor = handler_input.request_envelope.request.intent.slots["color"].value
+        playerColor = handler_input.request_envelope.request.intent.slots["color"].resolutions.resolutions_per_authority[0].values[0].value.name
         
         if not ("player" in _session_attr):                      # If no players are added yet, the first one gets added
             _i = 0
@@ -302,6 +302,7 @@ class SelectCategoryIntentHandler(AbstractRequestHandler):
         _alexa = handler_input.response_builder
         _speech_text = "pep"
         _alexa.speak(_speech_text)
+        return _alexa.response
         _session_attr = handler_input.attributes_manager.session_attributes
         _categories = handler_input.request_envelope.request.intent.slots.size.resolutions.resolutionsPerAuthority[0].values[0].value.name
         _selected_cats = []
