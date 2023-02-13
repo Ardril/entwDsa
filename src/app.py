@@ -303,16 +303,15 @@ class SelectCategoryIntentHandler(AbstractRequestHandler):
 
         _session_attr = handler_input.attributes_manager.session_attributes
         _categories = handler_input.request_envelope.request.intent.slots["categoryname"].resolutions.resolutions_per_authority[0].values[0].value.name
+        
+        _session_attr["categories"] = _categories
+
+        game.getQuestions(categories=_categories, difficulty=_session_attr["difficulty"])
+        _firstPlayer = _session_attr["player"]["0"]["color"]
+
         _speech_text = "pep"
         _alexa.speak(_speech_text)
         return _alexa.response
-        _selected_cats = []
-        _selected_cats.append(_categories)
-
-        _session_attr["categories"] = _selected_cats
-
-        game.getQuestions(categories=_selected_cats, difficulty=_session_attr["difficulty"])
-        _firstPlayer = _session_attr["player"]["0"]["color"]
 
         game.selectQuestion()
         _question = {}

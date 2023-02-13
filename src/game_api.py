@@ -151,7 +151,7 @@ class trivia():
         else:
             return hrc    
 
-    def getQuestions(self,categories,difficulty):
+    def getQuestions(self,category,difficulty):
         """Returns a list of questions that were requested from the api. The amount of questions is split evenly
          based on the number of categories and the type (multiple-choice/true-false) is based on a random boolean.
          Before it is returned, the list gets shuffled once"""
@@ -161,19 +161,19 @@ class trivia():
         counter = 0
         questions = {}
         i_a = []
-        amm = int(50/len(categories))
-        if(difficulty not in ["1","2","3"]) and (difficulty not in ["easy","medium","hard"]) :
-            raise ArgumentError().message("difficulty must either be one of ['1','2','3'] or ['easy','medium','hard']")
+        amm = 25
+        #if(difficulty not in ["1","2","3"]) and (difficulty not in ["easy","medium","hard"]) :
+        #   raise ArgumentError().message("difficulty must either be one of ['1','2','3'] or ['easy','medium','hard']")
 
-        for i in range(len(categories)):
-            typ = bool(random.getrandbits(1))
-            url = self.buidlUrl(amm,typ,categories[i],difficulty)
-            resp = requests.get(url).json()
+        typ = bool(random.getrandbits(1))
+        url = self.buidlUrl(amm,typ,category,difficulty)
+        resp = requests.get(url).json()
+        print(resp)
 
-            if resp["response_code"] != 0:
+        if resp["response_code"] != 0:
                 return
 
-            for entry in resp['results']:
+        for entry in resp['results']:
                 q = entry['question']
                 if "&quot;" in q:
                     q = q.replace("&quot;", "'")
@@ -184,10 +184,10 @@ class trivia():
                     if "&quot;" in answ:
                         answ = answ.replace("&quot;", "'")
                     i_a.append(answ)
-            qdict = dict(question = q, correct_answer = c_a, incorrect_answers = i_a)
-            name = "question" +str(counter)
-            questions[name]= qdict
-            counter += 1
+                qdict = dict(question = q, correct_answer = c_a, incorrect_answers = i_a)
+                name = "question" +str(counter)
+                questions[name]= qdict
+                counter += 1
         
         out_file = open("checkanswer.json", "w")
         json.dump(questions, out_file, indent = 6)
@@ -250,6 +250,7 @@ class trivia():
 
     def buildUrl(self,amount: int,typ: str,category: str,difficulty: str or int):
         comp = []
+        category = category.lower()
 
         # Amount 
         amount = str(amount)
@@ -266,21 +267,21 @@ class trivia():
         # Categories
         #comp.append("category="+str(category))
         categorylist = []
-        if category == "Science":
+        if category == "science":
             categorylist.append("category=17")
             categorylist.append("category=18")
             categorylist.append("category=19")
             categorylist.append("category=30")
 
             
-        if category == "Art":
+        if category == "art":
             categorylist.append("category=25")
 
-        if category == "Sport and Hobbies":
+        if category == "sport and hobbies":
             categorylist.append("category=28")
             categorylist.append("category=21")
 
-        if category == "Entertainment":
+        if category == "entertainment":
             categorylist.append("category=10")
             categorylist.append("category=11")
             categorylist.append("category=12")
@@ -292,10 +293,10 @@ class trivia():
             categorylist.append("category=31")
             categorylist.append("category=32")
 
-        if category == "History":
+        if category == "history":
             categorylist.append("category=23")
 
-        if category == "Geography":
+        if category == "geography":
             categorylist.append("category=22")
 
         comp.append(categorylist[random.randint(0,len(categorylist))])
