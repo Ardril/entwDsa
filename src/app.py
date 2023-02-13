@@ -361,8 +361,34 @@ class QuestionAnswerIntentHandler(AbstractRequestHandler):
             
         return is_intent_name("AnswerIntent")(handler_input)
 
-    def handle():
-        pass
+    def handle(self, handler_input: HandlerInput) -> Response:
+        _alexa = handler_input.response_builder
+
+        _session_attr = handler_input.attributes_manager.session_attributes
+        _answerHandle = handler_input.request_envelope.request.intent.slots["answerSlot"].resolutions.resolutions_per_authority[0].values[0].value.name
+        _question = {}
+        with open("aplquestion.json", "r") as out_file:
+            _question = out_file.json()
+
+        if _answerHandle == "A":
+            _answer = _question.answ[0]
+        if _answerHandle == "B":
+            _answer = _question.answ[1]
+        if _answerHandle == "C":
+            _answer = _question.answ[2]
+        if _answerHandle == "D":
+            _answer = _question.answ[3]
+
+        
+        cor = game.checkcorrect(_answer, _question.question)
+        if cor == True:
+            _speech_text = "That was correct"
+            _alexa.speak(_speech_text)
+        elif cor == False:
+            _speech_text = "That was wrong"
+            _alexa.speak(_speech_text)
+        return _alexa.response
+        
 
 class HelpIntentHandler(AbstractRequestHandler):
     """! Handler for Help Intent"""
