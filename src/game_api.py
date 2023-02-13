@@ -199,7 +199,7 @@ class trivia():
     def selectQuestion(self):
         i_a = []
         questions = {}
-        with open("checkanswer.json", "w") as out_file:
+        with open("checkanswer.json", "r") as out_file:
             questions = out_file.json()
         
         length = len(questions) - 1
@@ -212,19 +212,22 @@ class trivia():
         apldict = dict(question = q, answ = [c_a, i_a[0], i_a[1], i_a[2]])
         with open("aplquestion.json", "w") as out_file:
             json.dump(apldict, out_file, indent = 6)
-        questions.popitem()
         return apldict
 
 
 
 
     def checkcorrect(self, selected, q):
-        check_file = open("questions.json", "w")
+        check_file = open("questions.json", "r+")
         check = check_file.json()
         if selected == check.q["correct_answer"]:
+            check.popitem()
+            json.dump(check, check_file, indent = 6)
             check_file.close()
             return True
         else:
+            check.popitem()
+            json.dump(check, check_file, indent = 6)
             check_file.close()
             return False
 
