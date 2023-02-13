@@ -313,9 +313,9 @@ class SelectCategoryIntentHandler(AbstractRequestHandler):
         _firstPlayer = _session_attr["player"]["0"]["color"]
 
         game.selectQuestion()
-        out_file = open("aplquestion.json", "r")
-        _question = out_file.json()
-        out_file.close()
+        _question = {}
+        with open("aplquestion.json", "r") as out_file:
+            _question = out_file.json()
 
 
         _speech_text = "Okay. The Game starts in 3 .. 2 .. 1 ... Please answer each question with A, B, C or D."
@@ -324,10 +324,32 @@ class SelectCategoryIntentHandler(AbstractRequestHandler):
         _alexa.speak(_speech_text)
         _speech_text = f"The possible answers are {_question['answ'][0]}"
         _alexa.speak(_speech_text)
+        self.launch_screen(handler_input)
         _session_attr["questions"] = _question
         _session_attr["state"] = "question2"
 
         return _alexa.response
+
+    def supports_apl(self, handler_input):
+        # Checks whether APL is supported by the User's device
+        supported_interfaces = get_supported_interfaces(
+            handler_input)
+        return supported_interfaces.alexa_presentation_apl != None
+
+    def launch_screen(self, handler_input):
+        # Only add APL directive if User's device supports APL
+        if self.supports_apl(handler_input):
+            handler_input.response_builder.add_directive(
+                RenderDocumentDirective(
+                    token="documentToken",
+                    document={
+                        "type": "Link",
+                        "src": "doc://alexa/apl/documents/TP-Interface"
+                    },
+                    datasources="aplquestion.json"
+                )
+            )
+
 
 class QuestionAnswerIntentHandler(AbstractRequestHandler):
     def can_handle(self, handler_input: HandlerInput) -> bool:
