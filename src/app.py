@@ -181,7 +181,7 @@ class NumberOfPlayersIntentHandler(AbstractRequestHandler):
         if self.supports_apl(handler_input):
             handler_input.response_builder.add_directive(
                 RenderDocumentDirective(
-                    token="documentToken",
+                    token="colorToken",
                     document={
                         "type": "Link",
                         "src": "doc://alexa/apl/documents/Color"
@@ -326,11 +326,10 @@ class SelectCategoryIntentHandler(AbstractRequestHandler):
         
         _session_attr["categories"] = _categories
 
-        _speech_text = _categories + str(_session_attr["difficulty"])
+        _speech_text = _categories +"||"+ str(_session_attr["difficulty"])
         _alexa.speak(_speech_text)
-        return _alexa.response
 
-        game.getQuestions(category=_session_attr["categories"], difficulty=_session_attr["difficulty"])
+        game.getQuestions(category=_session_attr["categories"], difficulty=str(_session_attr["difficulty"]))
         _speech_text = "pep"
         _alexa.speak(_speech_text)
         return _alexa.response
