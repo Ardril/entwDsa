@@ -190,6 +190,8 @@ def buildUrl(amount: int,category: str,difficulty: str or int):
         url = "https://opentdb.com/api.php?"+( "&".join(comp))
         return url
 
+logger.log(requests.get("https://opentdb.com/api.php?type=multiple&category=25&difficulty=easy&amount=7"))
+
 class LaunchRequestHandler(AbstractRequestHandler):
     """! Handler for Skill Launch"""
     """! @param AbstractRequestHandler Extension of the class *AbstractRequestHandler*"""
