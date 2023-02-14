@@ -76,121 +76,123 @@ logger.setLevel(logging.DEBUG)
 handler = logging.StreamHandler(stream=stdout)
 logger.addHandler(handler)
 
-def getQuestions(category,difficulty):
-        """Returns a list of questions that were requested from the api"""
-        """! @param categories a list of categories selected by the player(s) """
-        """! @param difficulty """ 
-    	
-        counter = 0
-        questions = {}
-        amm = 5
-        #-- if(difficulty not in ["1","2","3"]) and (difficulty not in ["easy","medium","hard"]) :
-        #--    raise ArgumentError().message("difficulty must either be one of ['1','2','3'] or ['easy','medium','hard']")
+def getQuestions(category: str,difficulty: str or int):
+    """Returns a list of questions that were requested from the api"""
+    """! @param categories a list of categories selected by the player(s) """
+    """! @param difficulty """ 
+    
+    _counter = 0
+    _questions = {}
+    _amm = 5
+    #-- if(difficulty not in ["1","2","3"]) and (difficulty not in ["easy","medium","hard"]) :
+    #--    raise ArgumentError().message("difficulty must either be one of ['1','2','3'] or ['easy','medium','hard']")
 
-        url = buildUrl(amm,category,difficulty)
-        resp = get(url).json()
+    _url = buildUrl(_amm,category,difficulty)
+    _resp = get(_url).json()
 
-        if resp["response_code"] != 0:
-                return
+    if _resp["response_code"] != 0:
+        return
 
-        for entry in resp['results']:
-                i_a = []
-                q = entry['question']
-                if "&quot;" in q:
-                    q = q.replace("&quot;", "'")
-                c_a = entry['correct_answer']
-                if "&quot;" in c_a:
-                    c_a = c_a.replace("&quot;", "'")
-                for answ in entry['incorrect_answers']:
-                    if "&quot;" in answ:
-                        answ = answ.replace("&quot;", "'")
-                    i_a.append(answ)
-                qdict = dict(question = q, correct_answer = c_a, incorrect_answers = i_a)
-                name = "question" +str(counter)
-                questions[name]= qdict
-                counter += 1
-        
-                out_file = open("./checkanswer.json", "w")
-                json.dump(questions, out_file, indent = 6)
-                out_file.close()
+    for _entry in _resp['results']:
+        _incorr_answ = []
+        _question = _entry['question']
 
-        return questions
+        if "&quot;" in _question:
+            _question = _question.replace("&quot;", "'")
+            _corr_answ = _entry['correct_answer']
+
+        if "&quot;" in _corr_answ:
+            _corr_answ = _corr_answ.replace("&quot;", "'")
+            
+        for _answ in _entry['incorrect_answers']:
+            if "&quot;" in _answ:
+                _answ = _answ.replace("&quot;", "'")
+            _incorr_answ.append(_answ)
+
+        _qdict = dict(question = _question, correct_answer = _corr_answ, incorrect_answers = _incorr_answ)
+        _name = f"question{_counter}"
+        _questions[_name]= _qdict
+        _counter += 1
+
+        _out_file = open("./checkanswer.json", "w")
+        json.dump(_questions, _out_file, indent = 6)
+        _out_file.close()
+
+    return _questions
 
 def buildUrl(amount: int,category: str,difficulty: str or int):
-        comp = []
-        category = category.lower()
+    _comp = []
+    category = category.lower()
 
-        typ = "mc"
-        #Typ
-        comp.append("type=multiple")
-        
+    #-- typ = "mc"
 
-        # Categories
-        #comp.append("category="+str(category))
-        categorylist = []
-        if category == "science":
-            categorylist.append("category=17")
-            categorylist.append("category=18")
-            categorylist.append("category=19")
-            categorylist.append("category=30")
+    #Typ
+    _comp.append("type=multiple")
+    
 
-            
-        if category == "art":
-            categorylist.append("category=25")
+    # Categories
+    #-- comp.append("category="+str(category))
+    _categorylist = []
+    if category == "science":
+        _categorylist.append("category=17")
+        _categorylist.append("category=18")
+        _categorylist.append("category=19")
+        _categorylist.append("category=30")
 
-        if category == "sport and hobbies":
-            categorylist.append("category=28")
-            categorylist.append("category=21")
+    elif category == "art":
+        _categorylist.append("category=25")
 
-        if category == "entertainment":
-            categorylist.append("category=10")
-            categorylist.append("category=11")
-            categorylist.append("category=12")
-            categorylist.append("category=13")
-            categorylist.append("category=14")
-            categorylist.append("category=15")
-            categorylist.append("category=16")
-            categorylist.append("category=29")
-            categorylist.append("category=31")
-            categorylist.append("category=32")
+    elif category == "sport and hobbies":
+        _categorylist.append("category=28")
+        _categorylist.append("category=21")
 
-        if category == "history":
-            categorylist.append("category=23")
+    elif category == "entertainment":
+        _categorylist.append("category=10")
+        _categorylist.append("category=11")
+        _categorylist.append("category=12")
+        _categorylist.append("category=13")
+        _categorylist.append("category=14")
+        _categorylist.append("category=15")
+        _categorylist.append("category=16")
+        _categorylist.append("category=29")
+        _categorylist.append("category=31")
+        _categorylist.append("category=32")
 
-        if category == "geography":
-            categorylist.append("category=22")
-        
-        
+    elif category == "history":
+        _categorylist.append("category=23")
 
+    elif category == "geography":
+        _categorylist.append("category=22")
 
-        ri = randint(0,len(categorylist))
-        cat = categorylist[ri-1]
-        comp.append(cat)
+    _ri = randint(0,len(_categorylist))
+    cat = _categorylist[_ri-1]
+    _comp.append(cat)
 
+    # Difficulty
+    if "str" in str(type(difficulty)):
+        difficulty = f"difficulty={difficulty}"
+    else:
+        if difficulty == 1:
+            difficulty = "difficulty=easy" 
+        elif difficulty == 2:
+            difficulty = "difficulty=medium"
+        elif difficulty == 3:
+            difficulty == "difficulty=hard"
 
-        # Difficulty
-        if "str" in str(type(difficulty)):
-            difficulty = "difficulty="+difficulty
-        else:
-            if difficulty == 1:
-                difficulty = "difficulty=easy" 
-            elif difficulty == 2:
-                difficulty = "difficulty=medium"
-            elif difficulty == 3:
-                difficulty == "difficulty=hard"
-        comp.append(difficulty)
+    _comp.append(difficulty)
 
-        c_resp = get("https://opentdb.com/api_count.php?"+str(cat)).json()
-        # Amount
-        string = "total_"+difficulty.split("=")[1]+"_question_count"
-        if amount > c_resp["category_question_count"][string]:
-            amount = c_resp["category_question_count"][string]-2
-        amount = str(amount)
-        comp.append("amount="+amount)
+    # Amount
+    _string = "total_"+difficulty.split("=")[1]+"_question_count"
+    _c_resp = get(f"https://opentdb.com/api_count.php?{cat}").json()
+    if amount > _c_resp["category_question_count"][_string]:
+        amount = _c_resp["category_question_count"][_string]-2
 
+    _comp.append(f"amount={amount}")
 
-        url = "https://opentdb.com/api.php?"+( "&".join(comp))
-        return url
+    _args = "&".join(_comp)
+    _url = f"https://opentdb.com/api.php?{_args}"
+
+    return _url
 
 class LaunchRequestHandler(AbstractRequestHandler):
     """! Handler for Skill Launch"""
@@ -394,8 +396,8 @@ class SetDifficultyIntentHandler(AbstractRequestHandler):
         _session_attr["difficulty"] = _difficulty
         
 
-        _speech_text = f"The difficulty has been set to {_difficulty}. Which categories do you want to use? You can choose between Geography, History, Sports and Hobbies, Art, Entertainment and Science."
-        _reprompt = "Which categories do you want to use? You can pick between Geography, History, Sports and Hobbies, Art, Entertainment and Science."
+        _speech_text = f"The difficulty has been set to {_difficulty}. Which category do you want to use? You can choose between Geography, History, Sports and Hobbies, Art, Entertainment and Science."
+        _reprompt = "Which category do you want to use? You can pick between Geography, History, Sports and Hobbies, Art, Entertainment and Science."
 
         _session_attr["state"] = "waitingForCategory"
         handler_input.response_builder.speak(_speech_text).ask(_reprompt)
@@ -446,13 +448,14 @@ class SelectCategoryIntentHandler(AbstractRequestHandler):
 
         _session_attr = handler_input.attributes_manager.session_attributes
         _categories = handler_input.request_envelope.request.intent.slots["categoryname"].resolutions.resolutions_per_authority[0].values[0].value.name
-        
+        _difficulty = _session_attr["difficulty"]
+
         _session_attr["categories"] = _categories
 
         _speech_text = _categories +"||"+ str(_session_attr["difficulty"])
         _alexa.speak(_speech_text)
 
-        getQuestions(category=_session_attr["categories"], difficulty=str(_session_attr["difficulty"]))
+        getQuestions(category=_categories, difficulty=_difficulty)
         _speech_text = "pep"
         _alexa.speak(_speech_text)
         return _alexa.response
@@ -596,8 +599,8 @@ class HelpIntentHandler(AbstractRequestHandler):
                 _reprompt = "Please tell me on which difficulty you want to play. You can also choose harder difficulties. Just say: hard"
 
             elif _session_attr["state"] == "waitingForCategory":
-                _speech_text = "Please say on which categories you want to play. For example you can say: science, history"
-                _reprompt = "Please say on which categories you want to play. You can also just say all to play with all categories"
+                _speech_text = "Please say on which category you want to play. For example you can say: science, history"
+                _reprompt = "Please say on which category you want to play. For example you can also say: entertainment"
 
         handler_input.response_builder.speak(_speech_text).ask(_reprompt)
         return handler_input.response_builder.response
