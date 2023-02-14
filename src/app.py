@@ -41,6 +41,14 @@
 #   - Needed to convert Response -> HTTP
 # - os
 #   - Acces to environment variables on Azure Functions server
+# - logging
+#   - Used for debugging
+# - sys.stdout
+#   - Used for debugging in combination with 'logging'
+# - random.randint
+#   - Used for api call
+# - requests.get
+#   - Needed for api calls
 # - game_api
 #   - Local import; manages api call and contains game logic and utility functions
 
@@ -55,9 +63,9 @@ import azure.functions as func
 import json
 import os
 import logging
-import sys
-import random
-import requests
+from sys import stdout
+from random import randint
+from requests import get
 
 # Local import
 from src import game_api
@@ -65,14 +73,8 @@ from src import game_api
 
 logger = logging.getLogger("azure.mgmt.resource")
 logger.setLevel(logging.DEBUG)
-handler = logging.StreamHandler(stream=sys.stdout)
+handler = logging.StreamHandler(stream=stdout)
 logger.addHandler(handler)
-
-logger = logging.getLogger("azure.mgmt.resource")
-logger.setLevel(logging.DEBUG)
-handler = logging.StreamHandler(stream=sys.stdout)
-logger.addHandler(handler)
-
 
 def getQuestions(category,difficulty):
         """Returns a list of questions that were requested from the api"""
@@ -82,11 +84,11 @@ def getQuestions(category,difficulty):
         counter = 0
         questions = {}
         amm = 5
-        #if(difficulty not in ["1","2","3"]) and (difficulty not in ["easy","medium","hard"]) :
-        #   raise ArgumentError().message("difficulty must either be one of ['1','2','3'] or ['easy','medium','hard']")
+        #-- if(difficulty not in ["1","2","3"]) and (difficulty not in ["easy","medium","hard"]) :
+        #--    raise ArgumentError().message("difficulty must either be one of ['1','2','3'] or ['easy','medium','hard']")
 
         url = buildUrl(amm,category,difficulty)
-        resp = requests.get(url).json()
+        resp = get(url).json()
 
         if resp["response_code"] != 0:
                 return
@@ -161,7 +163,7 @@ def buildUrl(amount: int,category: str,difficulty: str or int):
         
 
 
-        ri= random.randint(0,len(categorylist))
+        ri = randint(0,len(categorylist))
         cat = categorylist[ri-1]
         comp.append(cat)
 
@@ -178,7 +180,7 @@ def buildUrl(amount: int,category: str,difficulty: str or int):
                 difficulty == "difficulty=hard"
         comp.append(difficulty)
 
-        c_resp = requests.get("https://opentdb.com/api_count.php?"+str(cat)).json()
+        c_resp = get("https://opentdb.com/api_count.php?"+str(cat)).json()
         # Amount
         string = "total_"+difficulty.split("=")[1]+"_question_count"
         if amount > c_resp["category_question_count"][string]:
@@ -421,6 +423,7 @@ class SetDifficultyIntentHandler(AbstractRequestHandler):
 class SelectCategoryIntentHandler(AbstractRequestHandler):
     """! Handler for setting the categorys and starting the game"""
     """! @param AbstractRequestHandler Extension of the class *AbstractRequestHandler*"""
+
     def can_handle(self, handler_input: HandlerInput) -> bool:
         """! Returns true if the Request inside the Handler Input has the session attribute *state* set to *waitingForCategory* 
             and the intent name is *SelectCategoryIntent*. 
@@ -428,15 +431,17 @@ class SelectCategoryIntentHandler(AbstractRequestHandler):
         """! @param handler_input Contains the session attribute and intent name.
             @return Returns an Boolean value
         """
+
         _session_attr = handler_input.attributes_manager.session_attributes
         
-        return ("state" in _session_attr) and is_intent_name("SelectCategoryIntent")(handler_input)
+        return ("state" in _session_attr) and (_session_attr["state"] == "waitingForCategory") and is_intent_name("SelectCategoryIntent")(handler_input)
 
     def handle(self, handler_input: HandlerInput) -> Response:
         """! \todo Sets the session attributes *state* to "question1", *categories* to the value got from handler_input, 
             builds the Response to announce that the game will start now and asks the first question.
         """
         """! @param handler_input Contains methods to manipulate the session attributes and build the Response."""
+
         _alexa = handler_input.response_builder
 
         _session_attr = handler_input.attributes_manager.session_attributes
@@ -498,7 +503,7 @@ class SelectCategoryIntentHandler(AbstractRequestHandler):
 
 class QuestionAnswerIntentHandler(AbstractRequestHandler):
     def can_handle(self, handler_input: HandlerInput) -> bool:
-        """! Returns true if the Request inside the Handler Input has the intent name *Answer*."""
+        """! Returns true if the Request inside the Handler Input has the intent name *AnswerIntent*."""
         """! @param handler_input Contains the intent name.
             @return Returns an Boolean value
         """
@@ -570,11 +575,31 @@ class HelpIntentHandler(AbstractRequestHandler):
         return is_intent_name("AMAZON.HelpIntent")(handler_input)
 
     def handle(self, handler_input: HandlerInput) -> Response:
-        """! \todo Builds Response that helps the user use the Skill correctly"""
+        """! Builds Response that helps the user use the Skill correctly based on the current *state*"""
         """! @param handler_input Contains the methods to build the Response
             @return Returns an Response obj which includes the generated Response
         """
         
+        _session_attr = handler_input.attributes_manager.session_attributes
+
+        if "state" in _session_attr:
+            if _session_attr["state"] == "waitingForPlayerCount":
+                _speech_text = "Just tell me how many players you are. For example you can say: we are two"
+                _reprompt = "Just tell me how many players you are. You also can say something like: we want to play as three"
+
+            elif _session_attr["state"] == "waitingForPlayerColor":
+                _speech_text = "Please tell me which color do you want. For example you can say: red"
+                _reprompt = "Please tell me which color do you want. You can also say something like: purple"
+
+            elif _session_attr["state"] == "waitingForDifficulty":
+                _speech_text = "Please tell me on which difficulty you want to play. You can say things like: easy, mediocre"
+                _reprompt = "Please tell me on which difficulty you want to play. You can also choose harder difficulties. Just say: hard"
+
+            elif _session_attr["state"] == "waitingForCategory":
+                _speech_text = "Please say on which categories you want to play. For example you can say: science, history"
+                _reprompt = "Please say on which categories you want to play. You can also just say all to play with all categories"
+
+        handler_input.response_builder.speak(_speech_text).ask(_reprompt)
         return handler_input.response_builder.response
 
 class CancelOrStopIntentHandler(AbstractRequestHandler):
@@ -683,7 +708,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     """! @param req Contains the incomming request in an azure.functions.HttpRequest obj
         @return Returns an azure.functions.HttpResponse obj which includes the http response
     """
-    
+
     _sb = SkillBuilder()
     _sb.skill_id = os.environ["SKILL_ID"]
     
@@ -703,5 +728,5 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     
     _webservice_handler = WebserviceSkillHandler(skill=_sb.create())
     response = _webservice_handler.verify_request_and_dispatch(req.headers, req.get_body().decode("utf-8"))
-    
-    return func.HttpResponse(json.dumps(response),mimetype="application/json")
+
+    return func.HttpResponse(body=json.dumps(response),mimetype="application/json", status_code=200)
