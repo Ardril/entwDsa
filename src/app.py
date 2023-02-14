@@ -329,7 +329,7 @@ class SelectCategoryIntentHandler(AbstractRequestHandler):
         _speech_text = _categories +"||"+ str(_session_attr["difficulty"])
         _alexa.speak(_speech_text)
 
-        game.getQuestions(category=_session_attr["categories"], difficulty=str(_session_attr["difficulty"]))
+        game_api.trivia.getQuestions(category=_session_attr["categories"], difficulty=str(_session_attr["difficulty"]))
         _speech_text = "pep"
         _alexa.speak(_speech_text)
         return _alexa.response
