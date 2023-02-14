@@ -158,6 +158,7 @@ class NumberOfPlayersIntentHandler(AbstractRequestHandler):
         _session_attr = handler_input.attributes_manager.session_attributes
         playerCount = int(handler_input.request_envelope.request.intent.slots["count"].value)
         _session_attr["playerCount"] = playerCount
+        self.launch_screen(handler_input)
         
         if playerCount > 1:
             _speech_text = "Okay. Player one, which color do you want?"
@@ -168,6 +169,26 @@ class NumberOfPlayersIntentHandler(AbstractRequestHandler):
         _session_attr["state"] = "waitingForPlayerColor"
         handler_input.response_builder.speak(_speech_text).ask(_reprompt)
         return handler_input.response_builder.response
+
+    def supports_apl(self, handler_input):
+        # Checks whether APL is supported by the User's device
+        supported_interfaces = get_supported_interfaces(
+            handler_input)
+        return supported_interfaces.alexa_presentation_apl != None
+
+    def launch_screen(self, handler_input):
+        # Only add APL directive if User's device supports APL
+        if self.supports_apl(handler_input):
+            handler_input.response_builder.add_directive(
+                RenderDocumentDirective(
+                    token="documentToken",
+                    document={
+                        "type": "Link",
+                        "src": "doc://alexa/apl/documents/Color"
+                    },
+                    datasources="aplquestion.json"
+                )
+            )
 
 class AddPlayerIntentHandler(AbstractRequestHandler):
     """! Handler for adding player(s) with a color"""
