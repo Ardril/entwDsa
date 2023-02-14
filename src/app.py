@@ -60,7 +60,7 @@ import random
 import requests
 
 # Local import
-import game_api
+from src import game_api
 
 
 logger = logging.getLogger("azure.mgmt.resource")
