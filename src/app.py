@@ -56,6 +56,8 @@ import json
 import os
 import logging
 import sys
+import random
+import requests
 
 # Local import
 import game_api
@@ -70,6 +72,124 @@ logger = logging.getLogger("azure.mgmt.resource")
 logger.setLevel(logging.DEBUG)
 handler = logging.StreamHandler(stream=sys.stdout)
 logger.addHandler(handler)
+
+
+def getQuestions(self,category,difficulty):
+        """Returns a list of questions that were requested from the api"""
+        """! @param categories a list of categories selected by the player(s) """
+        """! @param difficulty """ 
+    	
+        counter = 0
+        questions = {}
+        amm = 5
+        #if(difficulty not in ["1","2","3"]) and (difficulty not in ["easy","medium","hard"]) :
+        #   raise ArgumentError().message("difficulty must either be one of ['1','2','3'] or ['easy','medium','hard']")
+
+        typ = bool(random.getrandbits(1))
+        url = self.buildUrl(amm,typ,category,difficulty)
+        resp = requests.get(url).json()
+
+        if resp["response_code"] != 0:
+                return
+
+        for entry in resp['results']:
+                i_a = []
+                q = entry['question']
+                if "&quot;" in q:
+                    q = q.replace("&quot;", "'")
+                c_a = entry['correct_answer']
+                if "&quot;" in c_a:
+                    c_a = c_a.replace("&quot;", "'")
+                for answ in entry['incorrect_answers']:
+                    if "&quot;" in answ:
+                        answ = answ.replace("&quot;", "'")
+                    i_a.append(answ)
+                qdict = dict(question = q, correct_answer = c_a, incorrect_answers = i_a)
+                name = "question" +str(counter)
+                questions[name]= qdict
+                counter += 1
+        
+                out_file = open("checkanswer.json", "w")
+                json.dump(questions, out_file, indent = 6)
+                out_file.close()
+
+        return questions
+
+def buildUrl(self,amount: int,typ: str,category: str,difficulty: str or int):
+        comp = []
+        category = category.lower()
+
+        typ = "mc"
+        #Typ
+        comp.append("type=multiple")
+        
+
+        # Categories
+        #comp.append("category="+str(category))
+        categorylist = []
+        if category == "science":
+            categorylist.append("category=17")
+            categorylist.append("category=18")
+            categorylist.append("category=19")
+            categorylist.append("category=30")
+
+            
+        if category == "art":
+            categorylist.append("category=25")
+
+        if category == "sport and hobbies":
+            categorylist.append("category=28")
+            categorylist.append("category=21")
+
+        if category == "entertainment":
+            categorylist.append("category=10")
+            categorylist.append("category=11")
+            categorylist.append("category=12")
+            categorylist.append("category=13")
+            categorylist.append("category=14")
+            categorylist.append("category=15")
+            categorylist.append("category=16")
+            categorylist.append("category=29")
+            categorylist.append("category=31")
+            categorylist.append("category=32")
+
+        if category == "history":
+            categorylist.append("category=23")
+
+        if category == "geography":
+            categorylist.append("category=22")
+        
+        
+
+
+        ri= random.randint(0,len(categorylist))
+        cat = categorylist[ri-1]
+        comp.append(cat)
+
+
+        # Difficulty
+        if "str" in str(type(difficulty)):
+            difficulty = "difficulty="+difficulty
+        else:
+            if difficulty == 1:
+                difficulty = "difficulty=easy" 
+            elif difficulty == 2:
+                difficulty = "difficulty=medium"
+            elif difficulty == 3:
+                difficulty == "difficulty=hard"
+        comp.append(difficulty)
+
+        c_resp = requests.get("https://opentdb.com/api_count.php?"+str(cat)).json()
+        # Amount
+        string = "total_"+difficulty.split("=")[1]+"_question_count"
+        if amount > c_resp["category_question_count"][string]:
+            amount = c_resp["category_question_count"][string]-2
+        amount = str(amount)
+        comp.append("amount="+amount)
+
+
+        url = "https://opentdb.com/api.php?"+( "&".join(comp))
+        return url
 
 class LaunchRequestHandler(AbstractRequestHandler):
     """! Handler for Skill Launch"""
@@ -328,8 +448,7 @@ class SelectCategoryIntentHandler(AbstractRequestHandler):
         _speech_text = _categories +"||"+ str(_session_attr["difficulty"])
         _alexa.speak(_speech_text)
 
-        game = game_api.trivia()
-        game_api.trivia.getQuestions(category=_session_attr["categories"], difficulty=str(_session_attr["difficulty"]))
+        getQuestions(category=_session_attr["categories"], difficulty=str(_session_attr["difficulty"]))
         _speech_text = "pep"
         _alexa.speak(_speech_text)
         return _alexa.response
