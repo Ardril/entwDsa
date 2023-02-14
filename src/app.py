@@ -74,7 +74,7 @@ handler = logging.StreamHandler(stream=sys.stdout)
 logger.addHandler(handler)
 
 
-def getQuestions(self,category,difficulty):
+def getQuestions(category,difficulty):
         """Returns a list of questions that were requested from the api"""
         """! @param categories a list of categories selected by the player(s) """
         """! @param difficulty """ 
@@ -85,8 +85,7 @@ def getQuestions(self,category,difficulty):
         #if(difficulty not in ["1","2","3"]) and (difficulty not in ["easy","medium","hard"]) :
         #   raise ArgumentError().message("difficulty must either be one of ['1','2','3'] or ['easy','medium','hard']")
 
-        typ = bool(random.getrandbits(1))
-        url = self.buildUrl(amm,typ,category,difficulty)
+        url = buildUrl(amm,category,difficulty)
         resp = requests.get(url).json()
 
         if resp["response_code"] != 0:
@@ -115,7 +114,7 @@ def getQuestions(self,category,difficulty):
 
         return questions
 
-def buildUrl(self,amount: int,typ: str,category: str,difficulty: str or int):
+def buildUrl(amount: int,category: str,difficulty: str or int):
         comp = []
         category = category.lower()
 
