@@ -166,8 +166,9 @@ class trivia():
 
         typ = bool(random.getrandbits(1))
         url = self.buildUrl(amm,typ,category,difficulty)
+        print("url = "+url)
         resp = requests.get(url).json()
-        print(resp)
+        print("resp="+str(resp))
 
         if resp["response_code"] != 0:
                 return
@@ -252,10 +253,7 @@ class trivia():
         comp = []
         category = category.lower()
 
-        # Amount 
-        amount = str(amount)
-        comp.append("amount="+amount)
-
+        typ = "mc"
         #Typ
         comp.append("type=multiple")
         
@@ -294,8 +292,18 @@ class trivia():
 
         if category == "geography":
             categorylist.append("category=22")
+        
+        
 
-        comp.append(categorylist[random.randint(0,(len(categorylist)-1))])
+
+        ri= random.randint(0,len(categorylist))
+        print("ri ="+str(ri))
+        print("len = "+str(len(categorylist)))
+        cat = categorylist[ri-1]
+        comp.append(cat)
+
+        
+
         # Difficulty
         if "str" in str(type(difficulty)):
             difficulty = "difficulty="+difficulty
@@ -308,8 +316,20 @@ class trivia():
                 difficulty == "difficulty=hard"
         comp.append(difficulty)
 
+        c_resp = requests.get("https://opentdb.com/api_count.php?"+str(cat)).json()
+        print("c_resp ="+str(c_resp))
+        # Amount
+        string = "total_"+difficulty.split("=")[1]+"_question_count"
+        print("test_string =="+string)
+        if amount > c_resp["category_question_count"][string]:
+            amount = c_resp["category_question_count"][string]-2
+        amount = str(amount)
+        comp.append("amount="+amount)
+
 
         url = "https://opentdb.com/api.php?"+( "&".join(comp))
+        tokenstring = "&token="+str(self._TOKEN)
+        url = url #+ tokenstring
         print(url)
         return url
 
@@ -323,4 +343,5 @@ class trivia():
 
 if __name__ == "__main__":
     g = trivia()
-    g.getQuestions("science", "easy")
+    #g.buildUrl(5,"mc","Science",2)
+    #g.getQuestions(difficulty="easy",category="Art")
