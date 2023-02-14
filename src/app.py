@@ -58,9 +58,8 @@ import logging
 import sys
 
 # Local import
-from src import game_api
+import game_api
 
-game = game_api.trivia()
 
 logger = logging.getLogger("azure.mgmt.resource")
 logger.setLevel(logging.DEBUG)
@@ -329,6 +328,7 @@ class SelectCategoryIntentHandler(AbstractRequestHandler):
         _speech_text = _categories +"||"+ str(_session_attr["difficulty"])
         _alexa.speak(_speech_text)
 
+        game = game_api.trivia()
         game_api.trivia.getQuestions(category=_session_attr["categories"], difficulty=str(_session_attr["difficulty"]))
         _speech_text = "pep"
         _alexa.speak(_speech_text)
@@ -405,7 +405,7 @@ class QuestionAnswerIntentHandler(AbstractRequestHandler):
         if _answerHandle == "D":
             _answer = _question.answ[3]
 
-        
+        game = game_api.trivia()
         cor = game.checkcorrect(_answer, _question.question)
         if cor == True:
             return(
