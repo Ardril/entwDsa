@@ -101,10 +101,11 @@ class trivia():
     def __init__(self):
         resp = requests.get("https://opentdb.com/api_token.php?command=request").json()
         self._TOKEN = resp['token']
-        self.buildCategories()
-        self._game = game()
+        #self.buildCategories()
+        #self._game = game()
 
-
+    def updateToken():
+        pass
     def setupNewGame(self,game : game):
         
         return True
@@ -342,5 +343,5 @@ class trivia():
 if __name__ == "__main__":
     g = trivia()
     #g.buildUrl(5,"mc","Science",2)
-    g.getQuestions(category="Science",difficulty="easy")
-    g.selectQuestion()
+    #g.getQuestions(category="Science",difficulty="easy")
+    #g.selectQuestion()
