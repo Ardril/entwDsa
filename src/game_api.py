@@ -160,13 +160,12 @@ class trivia():
     	
         counter = 0
         questions = {}
-        i_a = []
-        amm = 25
+        amm = 5
         #if(difficulty not in ["1","2","3"]) and (difficulty not in ["easy","medium","hard"]) :
         #   raise ArgumentError().message("difficulty must either be one of ['1','2','3'] or ['easy','medium','hard']")
 
         typ = bool(random.getrandbits(1))
-        url = self.buidlUrl(amm,typ,category,difficulty)
+        url = self.buildUrl(amm,typ,category,difficulty)
         resp = requests.get(url).json()
         print(resp)
 
@@ -174,6 +173,7 @@ class trivia():
                 return
 
         for entry in resp['results']:
+                i_a = []
                 q = entry['question']
                 if "&quot;" in q:
                     q = q.replace("&quot;", "'")
@@ -189,9 +189,9 @@ class trivia():
                 questions[name]= qdict
                 counter += 1
         
-        out_file = open("checkanswer.json", "w")
-        json.dump(questions, out_file, indent = 6)
-        out_file.close()
+                out_file = open("checkanswer.json", "w")
+                json.dump(questions, out_file, indent = 6)
+                out_file.close()
 
         return questions
 
@@ -257,12 +257,8 @@ class trivia():
         comp.append("amount="+amount)
 
         #Typ
-        if typ == "mc":
-            comp.append("type=multiple")
-        elif typ == "tf":
-            comp.append("type=boolean")
-        else:
-            raise ArgumentError.message("typ must be either mc or tf")
+        comp.append("type=multiple")
+        
 
         # Categories
         #comp.append("category="+str(category))
@@ -299,7 +295,7 @@ class trivia():
         if category == "geography":
             categorylist.append("category=22")
 
-        comp.append(categorylist[random.randint(0,len(categorylist))])
+        comp.append(categorylist[random.randint(0,(len(categorylist)-1))])
         # Difficulty
         if "str" in str(type(difficulty)):
             difficulty = "difficulty="+difficulty
@@ -314,8 +310,6 @@ class trivia():
 
 
         url = "https://opentdb.com/api.php?"+( "&".join(comp))
-        tokenstring = "&token="+str(self._TOKEN)
-        url = url + tokenstring
         print(url)
         return url
 
@@ -329,4 +323,4 @@ class trivia():
 
 if __name__ == "__main__":
     g = trivia()
-    #g.buildUrl(5,"mc","Science",2)
+    g.getQuestions("science", "easy")
