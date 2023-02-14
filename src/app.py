@@ -382,12 +382,35 @@ class QuestionAnswerIntentHandler(AbstractRequestHandler):
         
         cor = game.checkcorrect(_answer, _question.question)
         if cor == True:
-            _speech_text = "That was correct"
-            _alexa.speak(_speech_text)
+            return(
+                handler_input.response_builder
+                    .add_directive(
+                        RenderDocumentDirective(
+                            token="soundToken",
+                            document={
+                                "type": "Link",
+                                "src": "doc://alexa/apla/documents/correct"
+                            },
+                            datasources={}
+                        )
+                )
+                .response
+            )
         elif cor == False:
-            _speech_text = "That was wrong"
-            _alexa.speak(_speech_text)
-        return _alexa.response
+            return(
+                handler_input.response_builder
+                    .add_directive(
+                        RenderDocumentDirective(
+                            token="soundToken",
+                            document={
+                                "type": "Link",
+                                "src": "doc://alexa/apla/documents/wrong"
+                            },
+                            datasources={}
+                        )
+                )
+                .response
+            )
         
 
 class HelpIntentHandler(AbstractRequestHandler):
