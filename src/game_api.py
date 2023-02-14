@@ -31,56 +31,6 @@ from copy import deepcopy
 import random
 import requests
 import json
-
-class game():
-    players = []    #player = ("name",points)
-    questions = []  #question = (question,correct answer,incorrect_answers)
-    settings = {
-                'amount': 0,
-                'typ': 'n',
-                'categories':[],
-                'difficulty':'n'
-                } 
-    # category is a list and could be selected from with a random function or via asking the players 
-    # == > buildURL must be called once for each category
-    activePlayer = None
-
-    def addPlayer(self, player: str):
-        if(self.playing):
-            return False
-        else:
-            self.players.append({player, 0})
-            return True
-
-    def setAmount(self,amount:int):
-        if amount <= 0:
-            raise ArgumentError(message="amount must not be lower than 0 or bigger than 50")
-        self.settings["amount"] = amount
-
-    def setTyp(self,typ: str):
-        if typ == "mc":
-            self.settings["typ"] = "mc"
-        elif typ == "tf":
-            self.settings["typ"] = "tf"
-        else:
-            raise ArgumentError.message("typ must be either 'mc' or 'tf' ")
-
-    def setCategory(self,category:int,islist = False):
-        if islist:
-            for cate in category:
-                if category > 32 or category < 9:
-                    raise ArgumentError(message="category must be a number between 9 and 32")
-            for cate in category:
-                self.settings["categories"].append(category)
-        else:
-            if category > 32 or category < 9:
-                raise ArgumentError(message="category must be a number between 9 and 32")
-            self.settings["categories"].append(category)
-
-    def setDifficulty(self,difficulty:str):
-        if difficulty > 3 or difficulty < 1:
-            raise ArgumentError(message="Difficulty must be a number between 1-3")
-        self.settings["difficulty"] = difficulty
         
 class trivia():
     _TOKEN = None
@@ -99,57 +49,8 @@ class trivia():
     
 
     def __init__(self):
-        resp = requests.get("https://opentdb.com/api_token.php?command=request").json()
-        self._TOKEN = resp['token']
-        self.buildCategories()
-        self._game = game()
+        pass
 
-
-    def setupNewGame(self,game : game):
-        
-        return True
-
-    
-
-    def buildCategories(self):
-        categoryResponse = requests.get("https://opentdb.com/api_category.php").json()
-        self._categories = deepcopy(categoryResponse['trivia_categories'])
-        #print(str(type(self._categories)))
-        return self._categories
-    
-    def listCategoriesByName(self):
-        cs = []
-        for entry in self._categories:
-            if(":" in entry['name']):
-                entry["name"] = entry['name'].split(":")[1]
-            cs.append(entry['name'])
-        return cs
-
-
-    def returnHumanReadableCategories(self, mode):
-        if(mode != "numbers" and mode != "names"):
-            raise ArgumentError().message("mode must be one of ['numbers','names']")
-        hrc = deepcopy(self._categories)
-        i = 1
-        for cat in hrc:
-            if(":" in cat["name"]):
-                cat["name"] = cat["name"].split(":")[1]
-            cat["number"] = i
-            i += 1
-            print("cat == %s",str(cat))
-        return hrc
-        if(mode=="numbers"):
-            li = []
-            for cat in hrc:
-                li.append(hrc['number'])
-            return li
-        elif(mode=="names"):
-            li = []
-            for cat in hrc:
-                li.append(hrc["name"])
-            return li
-        else:
-            return hrc    
 
     def getQuestions(self,category,difficulty):
         """Returns a list of questions that were requested from the api"""
@@ -164,9 +65,7 @@ class trivia():
 
         typ = bool(random.getrandbits(1))
         url = self.buildUrl(amm,typ,category,difficulty)
-        print("url = "+url)
         resp = requests.get(url).json()
-        print("resp="+str(resp))
 
         if resp["response_code"] != 0:
                 return
@@ -214,8 +113,6 @@ class trivia():
         return apldict
 
 
-
-
     def checkcorrect(self, selected, q):
         check_file = open("questions.json", "r+")
         check = check_file.json()
@@ -230,21 +127,6 @@ class trivia():
             check_file.close()
             return False
 
-
-
-
-
-
-
-        # quest = []
-        # if resp["response_code"] != 0:
-        #     return
-        # for question in resp['results']:
-        #     print("ENG:  "+question['question'])
-        #     quest.append(question['question'])
-        #     #print("GER:  "+self.translation.translate(str(question['question'])))'
-
-          
 
 
     def buildUrl(self,amount: int,typ: str,category: str,difficulty: str or int):
@@ -295,12 +177,9 @@ class trivia():
 
 
         ri= random.randint(0,len(categorylist))
-        print("ri ="+str(ri))
-        print("len = "+str(len(categorylist)))
         cat = categorylist[ri-1]
         comp.append(cat)
 
-        
 
         # Difficulty
         if "str" in str(type(difficulty)):
@@ -315,10 +194,8 @@ class trivia():
         comp.append(difficulty)
 
         c_resp = requests.get("https://opentdb.com/api_count.php?"+str(cat)).json()
-        print("c_resp ="+str(c_resp))
         # Amount
         string = "total_"+difficulty.split("=")[1]+"_question_count"
-        print("test_string =="+string)
         if amount > c_resp["category_question_count"][string]:
             amount = c_resp["category_question_count"][string]-2
         amount = str(amount)
@@ -326,21 +203,12 @@ class trivia():
 
 
         url = "https://opentdb.com/api.php?"+( "&".join(comp))
-        tokenstring = "&token="+str(self._TOKEN)
-        url = url #+ tokenstring
-        print(url)
         return url
 
     #difficulty = "" # easy,medium,hard or mixed or 1,2,3
-    def initGame(url,players):
-        resp = requests.get(url)
-        if resp.status_code != 200:
-            return 
-        result = json.loads(resp.json)
-        questions = result["results"]
 
 if __name__ == "__main__":
     g = trivia()
     #g.buildUrl(5,"mc","Science",2)
-    g.getQuestions(category="Science",difficulty="easy")
+    g.getQuestions(category="Science", difficulty="easy")
     g.selectQuestion()
