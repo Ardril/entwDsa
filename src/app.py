@@ -108,7 +108,7 @@ def getQuestions(category,difficulty):
                 questions[name]= qdict
                 counter += 1
         
-                out_file = open("checkanswer.json", "w")
+                out_file = open("./checkanswer.json", "w")
                 json.dump(questions, out_file, indent = 6)
                 out_file.close()
 
