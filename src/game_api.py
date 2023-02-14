@@ -152,9 +152,7 @@ class trivia():
             return hrc    
 
     def getQuestions(self,category,difficulty):
-        """Returns a list of questions that were requested from the api. The amount of questions is split evenly
-         based on the number of categories and the type (multiple-choice/true-false) is based on a random boolean.
-         Before it is returned, the list gets shuffled once"""
+        """Returns a list of questions that were requested from the api"""
         """! @param categories a list of categories selected by the player(s) """
         """! @param difficulty """ 
     	
@@ -198,19 +196,19 @@ class trivia():
 
 
     def selectQuestion(self):
-        i_a = []
+        answers = []
         questions = {}
         with open("checkanswer.json", "r") as out_file:
-            questions = out_file.json()
-        
+            questions = json.load(out_file)
         length = len(questions) - 1
-        for entry in questions["question"+str(length)]:
-            q = entry['question']
-            c_a = entry['correct_answer']
-            for answ in entry['incorrect_answers']:
-                i_a.append(answ)
-        
-        apldict = dict(question = q, answ = [c_a, i_a[0], i_a[1], i_a[2]])
+        q = questions[f"question"+str(length)]["question"]
+        answers.append(questions[f"question"+str(length)]["correct_answer"])
+        for answ in  questions[f"question"+str(length)]["incorrect_answers"]:
+            answers.append(answ)
+
+        random.shuffle(answers)
+        apldict = dict(question = q, answ = answers)
+
         with open("aplquestion.json", "w") as out_file:
             json.dump(apldict, out_file, indent = 6)
         return apldict
@@ -344,4 +342,5 @@ class trivia():
 if __name__ == "__main__":
     g = trivia()
     #g.buildUrl(5,"mc","Science",2)
-    #g.getQuestions(difficulty="easy",category="Art")
+    g.getQuestions(category="Science",difficulty="easy")
+    g.selectQuestion()
