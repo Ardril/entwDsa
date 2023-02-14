@@ -306,7 +306,13 @@ class SelectCategoryIntentHandler(AbstractRequestHandler):
         
         _session_attr["categories"] = _categories
 
-        game.getQuestions(categories=_categories, difficulty=_session_attr["difficulty"])
+        _speech_text = _session_attr["categories"] + _session_attr["difficulty"]
+        _alexa.speak(_speech_text)
+
+        game.getQuestions(category=_categories, difficulty=_session_attr["difficulty"])
+        _speech_text = "pep"
+        _alexa.speak(_speech_text)
+        return _alexa.response
         _firstPlayer = _session_attr["player"]["0"]["color"]
 
         _speech_text = "pep"
