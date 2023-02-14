@@ -158,7 +158,6 @@ class NumberOfPlayersIntentHandler(AbstractRequestHandler):
         _session_attr = handler_input.attributes_manager.session_attributes
         playerCount = int(handler_input.request_envelope.request.intent.slots["count"].value)
         _session_attr["playerCount"] = playerCount
-        self.launch_screen(handler_input)
         
         if playerCount > 1:
             _speech_text = "Okay. Player one, which color do you want?"
@@ -167,6 +166,7 @@ class NumberOfPlayersIntentHandler(AbstractRequestHandler):
         _reprompt = "Which color do you want?"
         
         _session_attr["state"] = "waitingForPlayerColor"
+        self.launch_screen(handler_input)
         handler_input.response_builder.speak(_speech_text).ask(_reprompt)
         return handler_input.response_builder.response
 
@@ -185,8 +185,7 @@ class NumberOfPlayersIntentHandler(AbstractRequestHandler):
                     document={
                         "type": "Link",
                         "src": "doc://alexa/apl/documents/Color"
-                    },
-                    datasources="aplquestion.json"
+                    }
                 )
             )
 
@@ -327,7 +326,7 @@ class SelectCategoryIntentHandler(AbstractRequestHandler):
         
         _session_attr["categories"] = _categories
 
-        _speech_text = _session_attr["categories"] + _session_attr["difficulty"]
+        _speech_text = _categories + str(_session_attr["difficulty"])
         _alexa.speak(_speech_text)
 
         game.getQuestions(category=_categories, difficulty=_session_attr["difficulty"])
