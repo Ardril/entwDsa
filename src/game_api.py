@@ -32,6 +32,8 @@ import random
 import requests
 import json
         
+
+        
 class trivia():
     _TOKEN = None
     _categories = {}
